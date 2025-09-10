@@ -18,6 +18,11 @@
             Status = QuestStatus.Planned;
         }
 
+        public void UpdateTitle(string newTitle)
+        {            
+            Title = newTitle;
+        }
+
         public void StartQuest()
         {
             Status = QuestStatus.InProgress;
