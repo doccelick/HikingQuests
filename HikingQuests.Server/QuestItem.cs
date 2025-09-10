@@ -12,5 +12,10 @@
             Description = description;
             Status = QuestStatus.Planned;
         }
+
+        public void StartQuest()
+        {
+            Status = QuestStatus.InProgress;
+        }
     }
 }
