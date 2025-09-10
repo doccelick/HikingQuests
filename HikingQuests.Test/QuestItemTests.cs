@@ -66,8 +66,8 @@ namespace HikingQuests.Test
         {
             var questItem = new QuestItem(template_title, template_description);
             
-            var exceptionMessage = Assert.Throws<InvalidOperationException>(questItem.CompleteQuest);
-            Assert.Equal(QuestMessages.QuestNotInProgress, exceptionMessage.Message);
+            var exception = Assert.Throws<InvalidOperationException>(questItem.CompleteQuest);
+            Assert.Equal(QuestMessages.QuestNotInProgress, exception.Message);
         }
 
         [Fact]
@@ -78,8 +78,8 @@ namespace HikingQuests.Test
             questItem.StartQuest();
             questItem.CompleteQuest();
             
-            var exceptionMessage = Assert.Throws<InvalidOperationException>(questItem.CompleteQuest);
-            Assert.Equal(QuestMessages.QuestAlreadyCompleted, exceptionMessage.Message);
+            var exception = Assert.Throws<InvalidOperationException>(questItem.CompleteQuest);
+            Assert.Equal(QuestMessages.QuestAlreadyCompleted, exception.Message);
         }
     }
 }

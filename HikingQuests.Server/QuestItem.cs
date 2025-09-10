@@ -20,6 +20,16 @@
 
         public void CompleteQuest()
         {
+            if (Status == QuestStatus.Completed)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestAlreadyCompleted);
+            }
+
+            if (Status != QuestStatus.InProgress)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestNotInProgress);
+            }
+
             Status = QuestStatus.Completed;
         }
     }
