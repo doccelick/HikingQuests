@@ -11,7 +11,7 @@ namespace HikingQuests.Test
             var title = "5 km forest hike";
 
             // Act
-            var questItem = new QuestItem(title);
+            var questItem = new QuestItem(title, "");
 
             // Assert
             Assert.Equal(QuestStatus.Planned, questItem.Status);
