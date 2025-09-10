@@ -29,6 +29,10 @@
 
         public void UpdateDescription(string newDescription)
         {
+            if (string.IsNullOrWhiteSpace(newDescription))
+            {
+                throw new ArgumentException(QuestMessages.DescriptionCannotBeNullOrEmpty);
+            }
             Description = newDescription;
         }
 
