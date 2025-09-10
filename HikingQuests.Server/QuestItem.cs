@@ -3,7 +3,7 @@
     public class QuestItem
     {
         public string Title { get; private set; }
-        public string Description { get; }
+        public string Description { get; private set; }
         public QuestStatus Status { get; private set; }
 
         public QuestItem(string? title, string description)
@@ -25,6 +25,11 @@
                 throw new ArgumentException(QuestMessages.TitleCannotBeNullOrEmpty);
             }
             Title = newTitle;
+        }
+
+        public void UpdateDescription(string newDescription)
+        {
+            Description = newDescription;
         }
 
         public void StartQuest()
