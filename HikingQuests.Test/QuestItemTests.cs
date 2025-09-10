@@ -10,74 +10,63 @@ namespace HikingQuests.Test
         [Fact]
         public void QuestItem_Status_Defaults_To_Planned_When_Created()
         {
-            // Arrange
             var title = string.Empty;
             var description = string.Empty;
 
-            // Act
             var questItem = new QuestItem(title, description);
 
-            // Assert
             Assert.Equal(QuestStatus.Planned, questItem.Status);
         }
 
         [Fact]
         public void QuestItem_Title_Is_Set_Correctly()
         {
-            // Arrange
             var title = template_title;
             var description = string.Empty;
 
-            // Act
             var questItem = new QuestItem(title, description);
 
-            // Assert
             Assert.Equal(title, questItem.Title);
         }
 
         [Fact]
         public void QuestItem_Description_Is_Set_Correctly()
         {
-            // Arrange
             var title = template_title;
             var description = template_description;
 
-            // Act
             var questItem = new QuestItem(title, description);
-            
-            // Assert
+
             Assert.Equal(description, questItem.Description);
         }
 
         [Fact]
         public void QuestItem_Status_Can_Be_Updated()
         {
-            // Arrange
-            var title = template_title;
-            var description = template_description;
-            var questItem = new QuestItem(title, description);
+            var questItem = new QuestItem(template_title, template_description);
 
-            // Act
             questItem.StartQuest();
 
-            // Assert
             Assert.Equal(QuestStatus.InProgress, questItem.Status);
         }
 
         [Fact]
         public void QuestItem_Can_Be_Marked_As_Completed()
         {
-            // Arrange
-            var title = template_title;
-            var description = template_description;
-            var questItem = new QuestItem(title, description);
+            var questItem = new QuestItem(template_title, template_description);
 
-            // Act
             questItem.StartQuest();
             questItem.CompleteQuest();
 
-            // Assert
             Assert.Equal(QuestStatus.Completed, questItem.Status);
+        }
+
+        [Fact]
+        public void QuestItem_Cannot_Be_Completed_Without_Starting()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+            
+            Assert.Throws<InvalidOperationException>(() => questItem.CompleteQuest());
         }
     }
 }
