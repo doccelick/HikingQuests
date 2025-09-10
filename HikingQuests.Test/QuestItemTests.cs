@@ -115,6 +115,17 @@ namespace HikingQuests.Test
         }
 
         [Fact]
+        public void QuestItem_Description_Can_Be_Updated()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+            var newDescription = "Walk 10 km following a mountain path.";
+
+            questItem.UpdateDescription(newDescription);
+
+            Assert.Equal(newDescription, questItem.Description);
+        }
+
+        [Fact]
         public void QuestItem_Status_Can_Be_Updated()
         {
             var questItem = new QuestItem(template_title, template_description);
