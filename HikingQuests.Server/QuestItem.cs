@@ -2,13 +2,18 @@
 {
     public class QuestItem
     {
-        public string Title { get; }
+        public string Title { get; private set; }
         public string Description { get; }
         public QuestStatus Status { get; private set; }
 
         public QuestItem(string title, string description)
         {
-            Title = title;
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException(QuestMessages.TitleCannotBeNullOrEmpty);
+            }
+            
+            Title = title;            
             Description = description;
             Status = QuestStatus.Planned;
         }

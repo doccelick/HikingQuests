@@ -10,7 +10,7 @@ namespace HikingQuests.Test
         [Fact]
         public void QuestItem_Status_Defaults_To_Planned_When_Created()
         {
-            var title = string.Empty;
+            var title = template_title;
             var description = string.Empty;
 
             var questItem = new QuestItem(title, description);
