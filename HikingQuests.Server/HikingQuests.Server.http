@@ -1,0 +1,6 @@
+@HikingQuests.Server_HostAddress = http://localhost:5115
+
+GET {{HikingQuests.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
