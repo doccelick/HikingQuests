@@ -41,10 +41,20 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestItem_Title_Cannot_Be_Null_Or_Empty_In_Constructor()
+        public void QuestItem_Title_Cannot_Be_Null_In_Constructor()
+        {
+            string? title = null;
+            var description = string.Empty;
+
+            var exception = Assert.Throws<ArgumentException>(() => new QuestItem(title, description));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Title_Cannot_Be_Empty_In_Constructor()
         {
             var title = string.Empty;
-            var description = string.Empty;
+            var description = template_description;
 
             var exception = Assert.Throws<ArgumentException>(() => new QuestItem(title, description));
             Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);

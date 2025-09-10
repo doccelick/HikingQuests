@@ -6,7 +6,7 @@
         public string Description { get; }
         public QuestStatus Status { get; private set; }
 
-        public QuestItem(string title, string description)
+        public QuestItem(string? title, string description)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
