@@ -66,7 +66,20 @@ namespace HikingQuests.Test
         {
             var questItem = new QuestItem(template_title, template_description);
             
-            Assert.Throws<InvalidOperationException>(() => questItem.CompleteQuest());
+            var exceptionMessage = Assert.Throws<InvalidOperationException>(questItem.CompleteQuest);
+            Assert.Equal(QuestMessages.QuestNotInProgress, exceptionMessage.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Cannot_Be_Completed_Twice()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+            
+            questItem.StartQuest();
+            questItem.CompleteQuest();
+            
+            var exceptionMessage = Assert.Throws<InvalidOperationException>(questItem.CompleteQuest);
+            Assert.Equal(QuestMessages.QuestAlreadyCompleted, exceptionMessage.Message);
         }
     }
 }
