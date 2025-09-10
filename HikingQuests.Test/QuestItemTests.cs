@@ -63,5 +63,21 @@ namespace HikingQuests.Test
             // Assert
             Assert.Equal(QuestStatus.InProgress, questItem.Status);
         }
+
+        [Fact]
+        public void QuestItem_Can_Be_Marked_As_Completed()
+        {
+            // Arrange
+            var title = template_title;
+            var description = template_description;
+            var questItem = new QuestItem(title, description);
+
+            // Act
+            questItem.StartQuest();
+            questItem.CompleteQuest();
+
+            // Assert
+            Assert.Equal(QuestStatus.Completed, questItem.Status);
+        }
     }
 }
