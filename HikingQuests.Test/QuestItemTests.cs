@@ -61,6 +61,15 @@ namespace HikingQuests.Test
         }
 
         [Fact]
+        public void QuestItem_Title_Cannot_Be_Whitespace_In_Constructor()
+        {
+            var title = "   ";
+            var description = template_description;
+            var exception = Assert.Throws<ArgumentException>(() => new QuestItem(title, description));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
         public void QuestItem_Status_Can_Be_Updated()
         {
             var questItem = new QuestItem(template_title, template_description);
