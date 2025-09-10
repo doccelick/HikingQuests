@@ -27,7 +27,7 @@
             Title = newTitle;
         }
 
-        public void UpdateDescription(string newDescription)
+        public void UpdateDescription(string? newDescription)
         {
             if (string.IsNullOrWhiteSpace(newDescription))
             {
