@@ -70,6 +70,18 @@ namespace HikingQuests.Test
         }
 
         [Fact]
+        public void QuestItem_Title_Can_Be_Updated()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+
+            var newTitle = "10 km mountain hike";
+
+            questItem.UpdateTitle(newTitle);
+
+            Assert.Equal(newTitle, questItem.Title);
+        }
+
+        [Fact]
         public void QuestItem_Status_Can_Be_Updated()
         {
             var questItem = new QuestItem(template_title, template_description);
