@@ -4,6 +4,9 @@ namespace HikingQuests.Test
 {
     public class QuestItemTests
     {
+        private string template_title = "5 km forest hike";
+        private string template_description = "Walk 5 km following a forest path.";
+
         [Fact]
         public void QuestItem_Status_Defaults_To_Planned_When_Created()
         {
@@ -22,7 +25,7 @@ namespace HikingQuests.Test
         public void QuestItem_Title_Is_Set_Correctly()
         {
             // Arrange
-            var title = "5 km forest hike";
+            var title = template_title;
             var description = string.Empty;
 
             // Act
@@ -36,14 +39,29 @@ namespace HikingQuests.Test
         public void QuestItem_Description_Is_Set_Correctly()
         {
             // Arrange
-            var title = "5 km forest hike";
-            var description = "Walk 5 km following a forest path.";
+            var title = template_title;
+            var description = template_description;
 
             // Act
             var questItem = new QuestItem(title, description);
             
             // Assert
             Assert.Equal(description, questItem.Description);
+        }
+
+        [Fact]
+        public void QuestItem_Status_Can_Be_Updated()
+        {
+            // Arrange
+            var title = template_title;
+            var description = template_description;
+            var questItem = new QuestItem(title, description);
+
+            // Act
+            questItem.StartQuest();
+
+            // Assert
+            Assert.Equal(QuestStatus.InProgress, questItem.Status);
         }
     }
 }
