@@ -20,6 +20,10 @@
 
         public void UpdateTitle(string newTitle)
         {            
+            if (string.IsNullOrWhiteSpace(newTitle))
+            {
+                throw new ArgumentException(QuestMessages.TitleCannotBeNullOrEmpty);
+            }
             Title = newTitle;
         }
 
