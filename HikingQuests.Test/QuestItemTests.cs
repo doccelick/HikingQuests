@@ -82,6 +82,39 @@ namespace HikingQuests.Test
         }
 
         [Fact]
+        public void QuestItem_Updated_Title_Cannot_Be_Null()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+
+            string? newTitle = null;
+
+            var exception = Assert.Throws<ArgumentException>(() => questItem.UpdateTitle(newTitle));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Updated_Title_Cannot_Be_Empty()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+            
+            var newTitle = string.Empty;
+
+            var exception = Assert.Throws<ArgumentException>(() => questItem.UpdateTitle(newTitle));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Updated_Title_Cannot_Be_Whitespace()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+            
+            var newTitle = "   ";
+
+            var exception = Assert.Throws<ArgumentException>(() => questItem.UpdateTitle(newTitle));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
         public void QuestItem_Status_Can_Be_Updated()
         {
             var questItem = new QuestItem(template_title, template_description);
