@@ -17,5 +17,10 @@
         {
             Status = QuestStatus.InProgress;
         }
+
+        public void CompleteQuest()
+        {
+            Status = QuestStatus.Completed;
+        }
     }
 }
