@@ -10,7 +10,7 @@ namespace HikingQuests.Test
         [Fact]
         public void QuestItem_Status_Defaults_To_Planned_When_Created()
         {
-            var title = string.Empty;
+            var title = template_title;
             var description = string.Empty;
 
             var questItem = new QuestItem(title, description);
@@ -38,6 +38,80 @@ namespace HikingQuests.Test
             var questItem = new QuestItem(title, description);
 
             Assert.Equal(description, questItem.Description);
+        }
+
+        [Fact]
+        public void QuestItem_Title_Cannot_Be_Null_In_Constructor()
+        {
+            string? title = null;
+            var description = string.Empty;
+
+            var exception = Assert.Throws<ArgumentException>(() => new QuestItem(title, description));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Title_Cannot_Be_Empty_In_Constructor()
+        {
+            var title = string.Empty;
+            var description = template_description;
+
+            var exception = Assert.Throws<ArgumentException>(() => new QuestItem(title, description));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Title_Cannot_Be_Whitespace_In_Constructor()
+        {
+            var title = "   ";
+            var description = template_description;
+            var exception = Assert.Throws<ArgumentException>(() => new QuestItem(title, description));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Title_Can_Be_Updated()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+
+            var newTitle = "10 km mountain hike";
+
+            questItem.UpdateTitle(newTitle);
+
+            Assert.Equal(newTitle, questItem.Title);
+        }
+
+        [Fact]
+        public void QuestItem_Updated_Title_Cannot_Be_Null()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+
+            string? newTitle = null;
+
+            var exception = Assert.Throws<ArgumentException>(() => questItem.UpdateTitle(newTitle));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Updated_Title_Cannot_Be_Empty()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+            
+            var newTitle = string.Empty;
+
+            var exception = Assert.Throws<ArgumentException>(() => questItem.UpdateTitle(newTitle));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
+        }
+
+        [Fact]
+        public void QuestItem_Updated_Title_Cannot_Be_Whitespace()
+        {
+            var questItem = new QuestItem(template_title, template_description);
+            
+            var newTitle = "   ";
+
+            var exception = Assert.Throws<ArgumentException>(() => questItem.UpdateTitle(newTitle));
+            Assert.Equal(QuestMessages.TitleCannotBeNullOrEmpty, exception.Message);
         }
 
         [Fact]
