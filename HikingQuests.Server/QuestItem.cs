@@ -6,19 +6,24 @@
         public string Description { get; private set; }
         public QuestStatus Status { get; private set; }
 
-        public QuestItem(string? title, string description)
+        public QuestItem(string? title, string? description)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
                 throw new ArgumentException(QuestMessages.TitleCannotBeNullOrEmpty);
             }
             
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                throw new ArgumentException(QuestMessages.DescriptionCannotBeNullOrEmpty);
+            }
+
             Title = title;            
             Description = description;
             Status = QuestStatus.Planned;
         }
 
-        public void UpdateTitle(string newTitle)
+        public void UpdateTitle(string? newTitle)
         {            
             if (string.IsNullOrWhiteSpace(newTitle))
             {

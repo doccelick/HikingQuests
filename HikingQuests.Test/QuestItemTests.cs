@@ -13,7 +13,7 @@ namespace HikingQuests.Test
         public void QuestItem_Title_Is_Set_Correctly_In_Constructor()
         {
             var title = template_title;
-            var description = string.Empty;
+            var description = template_description;
 
             var questItem = new QuestItem(title, description);
 
