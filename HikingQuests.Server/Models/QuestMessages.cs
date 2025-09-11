@@ -1,4 +1,4 @@
-﻿namespace HikingQuests.Server
+﻿namespace HikingQuests.Server.Models
 {
     public static class QuestMessages
     {

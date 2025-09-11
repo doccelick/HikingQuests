@@ -1,4 +1,4 @@
-using HikingQuests.Server;
+using HikingQuests.Server.Models;
 
 namespace HikingQuests.Test
 {
