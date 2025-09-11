@@ -71,7 +71,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] Complete Quest (InProgress -> Completed).
 - [x] 'QuestLog' with validation and tests.
 	- [x] Add Quest.
-	- [ ] Get All Quests.
+	- [x] Get All Quests.
 	- [x] Get Quest by ID/Title.
 
 ### Application (ASP.NET Core)
