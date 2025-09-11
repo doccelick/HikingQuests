@@ -1,4 +1,0 @@
-namespace HikingQuests.Server.Controllers
-{
-
-}

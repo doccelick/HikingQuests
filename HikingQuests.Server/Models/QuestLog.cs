@@ -1,6 +1,6 @@
 ﻿namespace HikingQuests.Server.Models
 {
-    public class QuestLog
+    public class QuestLog : IQuestLog
     {
         public QuestLog() { }
 
