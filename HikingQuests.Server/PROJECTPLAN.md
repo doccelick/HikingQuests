@@ -80,8 +80,8 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 ### Application (ASP.NET Core)
 - [x] Set up ASP.NET Core Web API project
 - [ ] 'QuestController' and tests:
-	- [ ] GET '/quests' -> list all quests.
-	- [ ] GET '/quests/{id}' -> get quest details by ID.
+	- [x] GET '/quests' -> list all quests.
+	- [x] GET '/quests/{id}' -> get quest details by ID.
 	- [ ] POST '/quests' -> create a new quest.
 	- [ ] PATCH '/quests/{id}/start' -> start a quest.
 	- [ ] PATCH '/quests/{id}/complete' -> complete a quest.
