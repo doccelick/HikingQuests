@@ -1,19 +1,38 @@
 using HikingQuests.Server.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers
 {
-    public class QuestController
+    [Route("api/quests")]
+    [ApiController]
+    public class QuestController : ControllerBase
     {
-        private IQuestLog questLog;
+        private readonly IQuestLog questLog;
 
         public QuestController(IQuestLog incomingQuestLog)
         {
             questLog = incomingQuestLog;
         }
 
-        public IEnumerable<QuestItem> GetQuests()
+        [HttpGet]
+        public ActionResult<IEnumerable<QuestItem>> GetQuests()
         {
-            return questLog.GetAllQuestItems();
+            var quests = questLog.GetAllQuestItems();
+            return Ok(quests);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetQuestItemById(Guid id)
+        {
+            try
+            {
+                var questItem = questLog.GetQuestById(id);
+                return Ok(questItem);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound();
+            }
         }
     }
 }
