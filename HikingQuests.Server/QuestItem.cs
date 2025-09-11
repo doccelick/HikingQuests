@@ -2,6 +2,7 @@
 {
     public class QuestItem
     {
+        public Guid Id { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
         public QuestStatus Status { get; private set; }
@@ -17,7 +18,7 @@
             {
                 throw new ArgumentException(QuestMessages.DescriptionCannotBeNullOrEmpty);
             }
-
+            Id = Guid.NewGuid();
             Title = title;            
             Description = description;
             Status = QuestStatus.Planned;
