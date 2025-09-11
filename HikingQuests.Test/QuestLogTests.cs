@@ -157,7 +157,7 @@ namespace HikingQuests.Test
             var questItem1 = new QuestItem(template_title, template_description);
             var questItem2 = new QuestItem("Catch a trout with a fly", "Use a fly rod to catch a trout with a fly.");
             var questItem3 = new QuestItem("Build a campfire", "Build a campfire using fallen sticks and dry leaves.");
-            
+
             questLog.AddQuest(questItem1);
             questLog.AddQuest(questItem2);
             questLog.AddQuest(questItem3);
@@ -176,6 +176,60 @@ namespace HikingQuests.Test
             var questLog = new QuestLog();
             var allQuests = questLog.GetAllQuestItems();
             Assert.Empty(allQuests);
+        }
+
+        [Fact]
+        public void QuestLog_Can_Update_QuestItem_Title()
+        {
+            var questLog = new QuestLog();
+            var questItem = new QuestItem("Original Title", template_description);
+
+            questLog.AddQuest(questItem);
+
+            var newTitle = "Updated Title";
+
+            questLog.UpdateQuestTitle(questItem.Id, newTitle);
+
+            var updatedQuest = questLog.GetQuestById(questItem.Id);
+
+            Assert.Equal(newTitle, updatedQuest.Title);
+        }
+
+        [Fact]
+        public void QuestLog_Can_Update_QuestItem_Description()
+        {
+            var questLog = new QuestLog();
+            var questItem = new QuestItem(template_title, "Original Description");
+
+            questLog.AddQuest(questItem);
+            var newDescription = "Updated Description";
+
+            questLog.UpdateQuestDescription(questItem.Id, newDescription);
+
+            var updatedQuest = questLog.GetQuestById(questItem.Id);
+
+            Assert.Equal(newDescription, updatedQuest.Description);
+        }
+
+        [Fact]
+        public void QuestLog_Updating_Title_Of_Nonexistent_QuestItem_Throws_Exception()
+        {
+            var questLog = new QuestLog();
+            var nonExistentQuestId = Guid.NewGuid();
+            var newTitle = "New Title";
+
+            var exception = Assert.Throws<KeyNotFoundException>(() => questLog.UpdateQuestTitle(nonExistentQuestId, newTitle));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
+        }
+
+        [Fact]
+        public void QuestLog_Updating_Description_Of_Nonexistent_QuestItem_Throws_Exception()
+        {
+            var questLog = new QuestLog();
+            var nonExistentQuestId = Guid.NewGuid();
+            var newDescription = "New Description";
+            var exception = Assert.Throws<KeyNotFoundException>(() => questLog.UpdateQuestDescription(nonExistentQuestId, newDescription));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
         }
     }
 }

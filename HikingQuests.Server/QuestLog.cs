@@ -43,5 +43,17 @@
         {
             return questItems.Values;
         }
+
+        public void UpdateQuestTitle(Guid questId, string newTitle)
+        {
+            var questItem = GetQuestById(questId);
+            questItem.UpdateTitle(newTitle);
+        }
+
+        public void UpdateQuestDescription(Guid questId, string newDescription)
+        {
+            var questItem = GetQuestById(questId);
+            questItem.UpdateDescription(newDescription);
+        }
     }
 }
