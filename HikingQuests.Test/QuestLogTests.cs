@@ -38,5 +38,36 @@ namespace HikingQuests.Test
 
             Assert.Equal(questItem.Id, retrievedQuest.Id);
         }
+
+        [Fact]
+        public void QuestLog_Adding_A_Null_QuestItem_Throws_Exception()
+        {
+            var questLog = new QuestLog();
+
+            QuestItem? questItem = null;
+
+            var exception = Assert.Throws<ArgumentNullException>(() => questLog.AddQuest(questItem!));
+            Assert.Equal(QuestMessages.QuestItemCannotBeNull, exception.Message);
+        }
+
+        [Fact]
+        public void QuestLog_Adding_Duplicate_QuestItem_Throws_Exception()
+        {
+            var questLog = new QuestLog();
+            var questItem = new QuestItem("5 km forest hike", "Walk 5 km following a forest path.");
+            questLog.AddQuest(questItem);
+
+            var exception = Assert.Throws<InvalidOperationException>(() => questLog.AddQuest(questItem));
+            Assert.Equal(QuestMessages.QuestAlreadyExistsInLog, exception.Message);
+        }
+
+        [Fact]
+        public void QuestLog_Getting_Nonexistent_QuestItem_By_ID_Throws_Exception()
+        {
+            var questLog = new QuestLog();
+            var nonExistentQuestId = Guid.NewGuid();
+            var exception = Assert.Throws<KeyNotFoundException>(() => questLog.GetQuestById(nonExistentQuestId));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
+        }
     }
 }
