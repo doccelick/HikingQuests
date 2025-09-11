@@ -11,7 +11,7 @@ namespace HikingQuests.Test
         public void QuestLog_Initial_Quest_Count_Is_Zero()
         {
             var questLog = new QuestLog();
-            var questCount = questLog.QuestItems.Count();
+            var questCount = questLog.GetAllQuestItems().Count();
 
             Assert.Equal(0, questCount);
         }
@@ -23,7 +23,7 @@ namespace HikingQuests.Test
             var questItem = new QuestItem(template_title, template_description);
             questLog.AddQuest(questItem);
 
-            var questCount = questLog.QuestItems.Count();
+            var questCount = questLog.GetAllQuestItems().Count();
 
             Assert.Equal(1, questCount);
         }
@@ -102,6 +102,20 @@ namespace HikingQuests.Test
         }
 
         [Fact]
+        public void QuestLog_Adding_QuestItem_With_Same_Title_But_Different_ID_Is_Allowed()
+        {
+            var questLog = new QuestLog();
+            var questItem1 = new QuestItem(template_title, template_description);
+            var questItem2 = new QuestItem(template_title, "A different description for the same title.");
+            questLog.AddQuest(questItem1);
+            questLog.AddQuest(questItem2);
+            var allQuests = questLog.GetAllQuestItems();
+            Assert.Equal(2, allQuests.Count());
+            Assert.Contains(questItem1, allQuests);
+            Assert.Contains(questItem2, allQuests);
+        }
+
+        [Fact]
         public void QuestLog_Adding_Multiple_QuestItems_Increases_Quest_Count_Accordingly()
         {
             var questLog = new QuestLog();
@@ -111,8 +125,57 @@ namespace HikingQuests.Test
             questLog.AddQuest(questItem1);
             questLog.AddQuest(questItem2);
             questLog.AddQuest(questItem3);
-            var questCount = questLog.QuestItems.Count();
+            var questCount = questLog.GetAllQuestItems().Count();
             Assert.Equal(3, questCount);
+        }
+
+        [Fact]
+        public void QuestLog_QuestItems_Are_Enumerable()
+        {
+            var questLog = new QuestLog();
+            var questItem1 = new QuestItem(template_title, template_description);
+            var questItem2 = new QuestItem("Catch a trout with a fly", "Use a fly rod to catch a trout with a fly.");
+
+            questLog.AddQuest(questItem1);
+            questLog.AddQuest(questItem2);
+
+            var titles = new List<string>();
+            var allQuests = questLog.GetAllQuestItems();
+
+            foreach (var quest in allQuests)
+            {
+                titles.Add(quest.Title);
+            }
+            Assert.Contains(template_title, titles);
+            Assert.Contains("Catch a trout with a fly", titles);
+        }
+
+        [Fact]
+        public void QuestLog_GetAllQuests_Returns_All_Added_QuestItems()
+        {
+            var questLog = new QuestLog();
+            var questItem1 = new QuestItem(template_title, template_description);
+            var questItem2 = new QuestItem("Catch a trout with a fly", "Use a fly rod to catch a trout with a fly.");
+            var questItem3 = new QuestItem("Build a campfire", "Build a campfire using fallen sticks and dry leaves.");
+            
+            questLog.AddQuest(questItem1);
+            questLog.AddQuest(questItem2);
+            questLog.AddQuest(questItem3);
+
+            var allQuests = questLog.GetAllQuestItems();
+
+            Assert.Equal(3, allQuests.Count());
+            Assert.Contains(questItem1, allQuests);
+            Assert.Contains(questItem2, allQuests);
+            Assert.Contains(questItem3, allQuests);
+        }
+
+        [Fact]
+        public void QuestLog_GetAllQuests_On_Empty_Log_Returns_Empty_Collection()
+        {
+            var questLog = new QuestLog();
+            var allQuests = questLog.GetAllQuestItems();
+            Assert.Empty(allQuests);
         }
     }
 }
