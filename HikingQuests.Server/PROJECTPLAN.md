@@ -69,13 +69,13 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] Quest constructor.
 	- [x] Start Quest (Planned -> InProgress)).
 	- [x] Complete Quest (InProgress -> Completed).
-	- [ ] Update title.
-	- [ ] Update description.
+	- [x] Update title.
+	- [x] Update description.
 - [x] 'QuestLog' with validation and tests.
 	- [x] Add Quest.
 	- [x] Get All Quests.
 	- [x] Get Quest by ID/Title.
-	- [ ] Update Quest (title, description).
+	- [x] Update Quest (title, description).
 
 ### Application (ASP.NET Core)
 - [x] Set up ASP.NET Core Web API project
