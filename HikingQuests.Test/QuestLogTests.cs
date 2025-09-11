@@ -4,6 +4,9 @@ namespace HikingQuests.Test
 {
     public class QuestLogTests
     {
+        private string template_title = "5 km forest hike";
+        private string template_description = "Walk 5 km following a forest path.";
+
         [Fact]
         public void QuestLog_Initial_Quest_Count_Is_Zero()
         {
@@ -17,7 +20,7 @@ namespace HikingQuests.Test
         public void QuestLog_A_Single_QuestItem_Added_Increases_Quest_Count_To_One()
         {
             var questLog = new QuestLog();
-            var questItem = new QuestItem("5 km forest hike", "Walk 5 km following a forest path.");
+            var questItem = new QuestItem(template_title, template_description);
             questLog.AddQuest(questItem);
 
             var questCount = questLog.QuestItems.Count();
@@ -29,7 +32,7 @@ namespace HikingQuests.Test
         public void QuestLog_A_Single_QuestItem_Added_Can_Be_Retrieved_By_ID()
         {
             var questLog = new QuestLog();
-            var questItem = new QuestItem("5 km forest hike", "Walk 5 km following a forest path.");
+            var questItem = new QuestItem(template_title, template_description);
             var questId = questItem.Id;
 
             questLog.AddQuest(questItem);
@@ -43,7 +46,7 @@ namespace HikingQuests.Test
         public void QuestLog_A_Single_QuestItem_Added_Can_Be_Retrieved_By_Title()
         {
             var questLog = new QuestLog();
-            var questItem = new QuestItem("5 km forest hike", "Walk 5 km following a forest path.");
+            var questItem = new QuestItem(template_title, template_description);
             var questTitle = questItem.Title;
             questLog.AddQuest(questItem);
             var retrievedQuest = questLog.GetQuestByTitle(questTitle);
@@ -64,7 +67,7 @@ namespace HikingQuests.Test
         public void QuestLog_Adding_Duplicate_QuestItem_Throws_Exception()
         {
             var questLog = new QuestLog();
-            var questItem = new QuestItem("5 km forest hike", "Walk 5 km following a forest path.");
+            var questItem = new QuestItem(template_title, template_description);
             questLog.AddQuest(questItem);
 
             var exception = Assert.Throws<InvalidOperationException>(() => questLog.AddQuest(questItem));
@@ -102,9 +105,9 @@ namespace HikingQuests.Test
         public void QuestLog_Adding_Multiple_QuestItems_Increases_Quest_Count_Accordingly()
         {
             var questLog = new QuestLog();
-            var questItem1 = new QuestItem("5 km forest hike", "Walk 5 km following a forest path.");
-            var questItem2 = new QuestItem("10 km mountain hike", "Climb 10 km up a mountain trail.");
-            var questItem3 = new QuestItem("3 km lake walk", "Stroll 3 km around the lake.");
+            var questItem1 = new QuestItem(template_title, template_description);
+            var questItem2 = new QuestItem("Catch a trout with a fly", "Use a fly rod to catch a trout with a fly.");
+            var questItem3 = new QuestItem("Build a campfire", "Build a campfire using fallen sticks and dry leaves.");
             questLog.AddQuest(questItem1);
             questLog.AddQuest(questItem2);
             questLog.AddQuest(questItem3);
