@@ -20,7 +20,7 @@
             {
                 throw new ArgumentException(QuestMessages.DescriptionCannotBeNullOrEmpty);
             }
-            //Id = Guid.NewGuid();
+
             Title = title;            
             Description = description;
             Status = QuestStatus.Planned;
