@@ -188,7 +188,7 @@ namespace HikingQuests.Test
 
             var newTitle = "Updated Title";
 
-            questLog.UpdateQuestTitle(quest.Id, newTitle);
+            questLog.UpdateQuestTitle(questItem.Id, newTitle);
 
             var updatedQuest = questLog.GetQuestById(questItem.Id);
 
