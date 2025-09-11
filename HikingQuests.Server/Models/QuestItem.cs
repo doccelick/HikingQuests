@@ -1,4 +1,4 @@
-﻿namespace HikingQuests.Server
+﻿namespace HikingQuests.Server.Models
 {
     public class QuestItem
     {
