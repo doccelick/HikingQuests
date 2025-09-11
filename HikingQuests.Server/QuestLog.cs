@@ -4,9 +4,8 @@
     {
         public QuestLog() { }
 
-        private Dictionary<Guid, QuestItem> _questItems = new Dictionary<Guid, QuestItem>();
-        public IEnumerable<QuestItem> QuestItems => _questItems.Values;
-
+        private Dictionary<Guid, QuestItem> questItems = new Dictionary<Guid, QuestItem>();
+        
         public void AddQuest(QuestItem? questItem)
         {
             if (questItem == null)
@@ -14,30 +13,35 @@
                 throw new ArgumentNullException(nameof(questItem));
             }
 
-            if (_questItems.ContainsKey(questItem.Id))
+            if (questItems.ContainsKey(questItem.Id))
             {
                 throw new InvalidOperationException(QuestMessages.QuestAlreadyExistsInLog);
             }
-            _questItems[questItem.Id] = questItem;
+            questItems[questItem.Id] = questItem;
         }
 
         public QuestItem GetQuestById(Guid questId)
         {
-            if (!_questItems.ContainsKey(questId))
+            if (!questItems.ContainsKey(questId))
             {
                 throw new KeyNotFoundException(QuestMessages.QuestNotFound);
             }
-            return _questItems[questId];
+            return questItems[questId];
         }
 
         public QuestItem GetQuestByTitle(string title)
         {
-            var questItem = _questItems.Values.FirstOrDefault(q => q.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+            var questItem = questItems.Values.FirstOrDefault(q => q.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
             if (questItem == null)
             {
                 throw new KeyNotFoundException(QuestMessages.QuestNotFound);
             }
             return questItem;
+        }
+
+        public IEnumerable<QuestItem> GetAllQuestItems()
+        {
+            return questItems.Values;
         }
     }
 }
