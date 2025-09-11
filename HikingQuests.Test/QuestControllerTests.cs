@@ -7,6 +7,12 @@ namespace HikingQuests.Test
 {
     public class QuestControllerTests
     {
+        private T GetValueFromActionResult<T>(ActionResult<T> actionResult)
+        {
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            return Assert.IsAssignableFrom<T>(okResult.Value);
+        }
+
         [Fact]
         public void GetQuests_Returns_All_Quests()
         {
@@ -20,16 +26,10 @@ namespace HikingQuests.Test
             });
 
             var controller = new QuestController(mockQuestLog.Object);
-
             var result = controller.GetQuests();
 
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<QuestItem>>>(result);
-            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-
-            var quests = Assert.IsAssignableFrom<IEnumerable<QuestItem>>(okResult.Value);
-            
+            var quests = GetValueFromActionResult(result);            
             Assert.Equal(3, quests.Count());
-
             mockQuestLog.Verify(q => q.GetAllQuestItems(), Times.Once);
         }
 
@@ -42,9 +42,8 @@ namespace HikingQuests.Test
 
             var controller = new QuestController(mockQuestLog.Object);
             var result = controller.GetQuests();
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<QuestItem>>>(result);
-            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var quests = Assert.IsAssignableFrom<IEnumerable<QuestItem>>(okResult.Value);
+
+            var quests = GetValueFromActionResult(result);
             Assert.Empty(quests);
         }
 
@@ -52,9 +51,9 @@ namespace HikingQuests.Test
         public void GetQuests_Throws_Exception_When_QuestLog_Fails()
         {
             var mockQuestLog = new Mock<IQuestLog>();
-
             mockQuestLog.Setup(q => q.GetAllQuestItems()).Throws(new Exception("Database error"));
             var controller = new QuestController(mockQuestLog.Object);
+
             var exception = Assert.Throws<Exception>(() => controller.GetQuests());
             Assert.Equal("Database error", exception.Message);
         }
@@ -79,12 +78,12 @@ namespace HikingQuests.Test
                 new QuestItem("Quest B", "Description B"),
                 new QuestItem("Quest C", "Description C")
             });
+
             var controller = new QuestController(mockQuestLog.Object);
             var result = controller.GetQuests();
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<QuestItem>>>(result);
-            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
-            var quests = Assert.IsAssignableFrom<IEnumerable<QuestItem>>(okResult.Value);
+            var quests = GetValueFromActionResult(result);
             var titles = quests.Select(q => q.Title).ToList();
+
             Assert.Contains("Quest A", titles);
             Assert.Contains("Quest B", titles);
             Assert.Contains("Quest C", titles);
@@ -100,9 +99,7 @@ namespace HikingQuests.Test
             var controller = new QuestController(mockQuestLog.Object);
 
             var result = controller.GetQuestItemById(mockedQuestItem.Id);
-
             var okResult = Assert.IsType<OkObjectResult>(result);
-
             var questItem = Assert.IsType<QuestItem>(okResult.Value);
 
             Assert.Equal(mockedQuestItem.Id, questItem.Id);
@@ -118,8 +115,10 @@ namespace HikingQuests.Test
             var mockQuestLog = new Mock<IQuestLog>();
             var invalidId = Guid.NewGuid();
             mockQuestLog.Setup(q => q.GetQuestById(invalidId)).Throws(new KeyNotFoundException());
+
             var controller = new QuestController(mockQuestLog.Object);
             var result = controller.GetQuestItemById(invalidId);
+
             Assert.IsType<NotFoundResult>(result);
             mockQuestLog.Verify(q => q.GetQuestById(invalidId), Times.Once);
         }
