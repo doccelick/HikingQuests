@@ -6,11 +6,11 @@
 
         private Dictionary<Guid, QuestItem> questItems = new Dictionary<Guid, QuestItem>();
         
-        public void AddQuest(QuestItem? questItem)
+        public void AddQuest(QuestItem questItem)
         {
             if (questItem == null)
             {
-                throw new ArgumentNullException(nameof(questItem));
+                throw new ArgumentNullException(nameof(questItem), QuestMessages.QuestItemCannotBeNull);
             }
 
             if (questItems.ContainsKey(questItem.Id))
