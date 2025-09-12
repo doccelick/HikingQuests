@@ -28,8 +28,6 @@ namespace HikingQuests.Test
                 new QuestItem("Quest C", "Description C")
             });
 
-
-
             var controller = new QuestController(mockQuestLog.Object);
             var result = controller.GetQuests();
 
