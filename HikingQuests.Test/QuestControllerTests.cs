@@ -7,8 +7,6 @@ namespace HikingQuests.Test
 {
     public class QuestControllerTests
     {
-       
-
         private IEnumerable<QuestItem> GetQuestsFromActionResult(IActionResult actionResult)
         {
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
