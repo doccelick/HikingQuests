@@ -109,7 +109,7 @@ namespace HikingQuests.Test
             mockQuestLog
                 .Setup(q => q.GetQuestById(mockedQuestItem.Id))
                 .Returns(mockedQuestItem);
-            
+
 
             var result = controller.GetQuestItemById(mockedQuestItem.Id);
 
@@ -171,12 +171,12 @@ namespace HikingQuests.Test
                 new ArgumentNullException(nameof(QuestItem)
                 , QuestMessages.QuestItemCannotBeNull
                 ));
-            
+
             var result = controller.AddQuest(null!);
-            
+
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal(QuestMessages.QuestItemCannotBeNull, badRequestResult.Value);
-            
+
             mockQuestLog.Verify(q => q.AddQuest(It.IsAny<QuestItem>()), Times.Once);
         }
 
@@ -191,14 +191,31 @@ namespace HikingQuests.Test
                 .Setup(q => q.AddQuest(existingQuest))
                 .Throws(new InvalidOperationException()
                 );
-            
-            
+
+
             var result = controller.AddQuest(existingQuest);
-            
+
             var conflictResult = Assert.IsType<ConflictObjectResult>(result);
             Assert.Equal(QuestMessages.QuestAlreadyExistsInLog, conflictResult.Value);
 
             mockQuestLog.Verify(q => q.AddQuest(existingQuest), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateQuest_Correctly_Updates_Quest_Title()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var existingQuest = new QuestItem("Old Title", "Some Description");
+            var controller = new QuestController(mockQuestLog.Object);
+            var newTitle = "New Title";
+
+            controller.AddQuest(existingQuest);
+
+            var result = controller.UpdateQuestTitle(existingQuest.Id, newTitle);
+
+            Assert.IsType<NoContentResult>(result);
+
+            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingQuest.Id, newTitle), Times.Once);
         }
     }
 }
