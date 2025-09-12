@@ -35,11 +35,19 @@ namespace HikingQuests.Server.Controllers
                 return CreatedAtAction(nameof(GetQuestItemById), new { id = questItem.Id }, questItem);
             });
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}/title")]
         public IActionResult UpdateQuestTitle(Guid id, [FromBody] string newTitle) =>
             HandleDomainExceptions(() =>
             {
                 questLog.UpdateQuestTitle(id, newTitle);
+                return NoContent();
+            });
+
+        [HttpPatch("{id}/description")]
+        public IActionResult UpdateQuestDescription(Guid id, [FromBody] string newDescription) =>
+            HandleDomainExceptions(() =>
+            {
+                questLog.UpdateQuestDescription(id, newDescription);
                 return NoContent();
             });
 
