@@ -217,5 +217,22 @@ namespace HikingQuests.Test
 
             mockQuestLog.Verify(q => q.UpdateQuestTitle(existingQuest.Id, newTitle), Times.Once);
         }
+
+        [Fact]
+        public void UpdateQuest_Correctly_Updates_Quest_Description()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var existingQuest = new QuestItem("Old Title", "Some Description");
+            var controller = new QuestController(mockQuestLog.Object);
+            var newTitle = "New Title";
+
+            controller.AddQuest(existingQuest);
+
+            var result = controller.UpdateQuestTitle(existingQuest.Id, newTitle);
+
+            Assert.IsType<NoContentResult>(result);
+
+            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingQuest.Id, newTitle), Times.Once);
+        }
     }
 }
