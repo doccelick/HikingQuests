@@ -8,5 +8,6 @@
         public const string QuestNotInProgress = "Quest must be in progress to be completed.";
         public const string QuestAlreadyExistsInLog = "Quest with same ID already exists in the quest log.";
         public const string QuestNotFound = "Quest not found in the quest log.";
+        public const string QuestItemCannotBeNull = "Quest cannot be null.";
     }
 }

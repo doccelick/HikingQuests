@@ -9,29 +9,49 @@ namespace HikingQuests.Server.Controllers
     {
         private readonly IQuestLog questLog;
 
-        public QuestController(IQuestLog incomingQuestLog)
-        {
-            questLog = incomingQuestLog;
-        }
+        public QuestController(IQuestLog incomingQuestLog) => questLog = incomingQuestLog;
 
         [HttpGet]
-        public ActionResult<IEnumerable<QuestItem>> GetQuests()
+        public IActionResult GetQuests() =>
+        HandleDomainExceptions(() => 
         {
             var quests = questLog.GetAllQuestItems();
             return Ok(quests);
-        }
+        });
 
         [HttpGet("{id}")]
-        public IActionResult GetQuestItemById(Guid id)
-        {
-            try
+        public IActionResult GetQuestItemById(Guid id) =>
+            HandleDomainExceptions(() => 
             {
                 var questItem = questLog.GetQuestById(id);
                 return Ok(questItem);
-            }
-            catch (KeyNotFoundException ex)
+            });
+
+        [HttpPost]
+        public IActionResult AddQuest([FromBody] QuestItem questItem) => 
+            HandleDomainExceptions(() =>
             {
-                return NotFound();
+                questLog.AddQuest(questItem);
+                return CreatedAtAction(nameof(GetQuestItemById), new { id = questItem.Id }, questItem);
+            });
+
+        private IActionResult HandleDomainExceptions(Func<IActionResult> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (ArgumentNullException)
+            {
+                return BadRequest(QuestMessages.QuestItemCannotBeNull);
+            }
+            catch (InvalidOperationException)
+            {
+                return Conflict(QuestMessages.QuestAlreadyExistsInLog);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(QuestMessages.QuestNotFound);
             }
         }
     }
