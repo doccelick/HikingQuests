@@ -202,7 +202,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void UpdateQuest_Correctly_Updates_Quest_Title()
+        public void UpdateQuestTitle_Correctly_Updates_Quest_Title()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var existingQuest = new QuestItem("Old Title", "Some Description");
@@ -219,7 +219,26 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void UpdateQuest_Correctly_Updates_Quest_Description()
+        public void UpdateQuestTitle_Returns_NotFound_For_Invalid_Id()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var invalidId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+            var newTitle = "New Title";
+
+            mockQuestLog
+                .Setup(q => q.UpdateQuestTitle(invalidId, newTitle))
+                .Throws(new KeyNotFoundException());
+
+            var result = controller.UpdateQuestTitle(invalidId, newTitle);
+            
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
+            mockQuestLog.Verify(q => q.UpdateQuestTitle(invalidId, newTitle), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateQuestDescription_Correctly_Updates_Quest_Description()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var existingQuest = new QuestItem("Old Title", "Some Description");
@@ -233,6 +252,25 @@ namespace HikingQuests.Test
             Assert.IsType<NoContentResult>(result);
 
             mockQuestLog.Verify(q => q.UpdateQuestTitle(existingQuest.Id, newTitle), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateQuestDescription_Returns_NotFound_For_Invalid_Id()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var invalidId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+            var newDescription = "New Description";
+
+            mockQuestLog
+                .Setup(q => q.UpdateQuestDescription(invalidId, newDescription))
+                .Throws(new KeyNotFoundException());
+
+            var result = controller.UpdateQuestDescription(invalidId, newDescription);
+            
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
+            mockQuestLog.Verify(q => q.UpdateQuestDescription(invalidId, newDescription), Times.Once);
         }
     }
 }
