@@ -13,7 +13,7 @@ namespace HikingQuests.Server.Controllers
 
         [HttpGet]
         public IActionResult GetQuests() =>
-        HandleDomainExceptions(() => 
+        HandleDomainExceptions(() =>
         {
             var quests = questLog.GetAllQuestItems();
             return Ok(quests);
@@ -21,18 +21,26 @@ namespace HikingQuests.Server.Controllers
 
         [HttpGet("{id}")]
         public IActionResult GetQuestItemById(Guid id) =>
-            HandleDomainExceptions(() => 
+            HandleDomainExceptions(() =>
             {
                 var questItem = questLog.GetQuestById(id);
                 return Ok(questItem);
             });
 
         [HttpPost]
-        public IActionResult AddQuest([FromBody] QuestItem questItem) => 
+        public IActionResult AddQuest([FromBody] QuestItem questItem) =>
             HandleDomainExceptions(() =>
             {
                 questLog.AddQuest(questItem);
                 return CreatedAtAction(nameof(GetQuestItemById), new { id = questItem.Id }, questItem);
+            });
+
+        [HttpPatch("{id}")]
+        public IActionResult UpdateQuestTitle(Guid id, [FromBody] string newTitle) =>
+            HandleDomainExceptions(() =>
+            {
+                questLog.UpdateQuestTitle(id, newTitle);
+                return NoContent();
             });
 
         private IActionResult HandleDomainExceptions(Func<IActionResult> action)
