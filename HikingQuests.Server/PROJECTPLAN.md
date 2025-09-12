@@ -82,7 +82,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 - [ ] 'QuestController' and tests:
 	- [x] GET '/quests' -> list all quests.
 	- [x] GET '/quests/{id}' -> get quest details by ID.
-	- [ ] POST '/quests' -> create a new quest.
+	- [x] POST '/quests' -> create a new quest.
 	- [ ] PATCH '/quests/{id}/start' -> start a quest.
 	- [ ] PATCH '/quests/{id}/complete' -> complete a quest.
 	- [ ] PATCH '/quests/{id}' -> update quest title.
