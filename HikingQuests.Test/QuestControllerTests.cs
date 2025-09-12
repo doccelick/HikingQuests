@@ -7,6 +7,8 @@ namespace HikingQuests.Test
 {
     public class QuestControllerTests
     {
+        //GET tests
+
         private T GetValueFromActionResult<T>(ActionResult<T> actionResult)
         {
             var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
@@ -121,6 +123,23 @@ namespace HikingQuests.Test
 
             Assert.IsType<NotFoundResult>(result);
             mockQuestLog.Verify(q => q.GetQuestById(invalidId), Times.Once);
+        }
+
+        //POST tests
+
+        [Fact]
+        public void PostQuest_Adds_Quest_Successfully()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();            
+            var controller = new QuestController(mockQuestLog.Object);
+            
+            var newQuest = new QuestItem("New Quest", "New Description");
+            
+            var result = controller.PostQuest(newQuest);
+            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
+            var returnedQuest = Assert.IsType<QuestItem>(createdAtActionResult.Value);
+            Assert.Equal(newQuest.Id, returnedQuest.Id);
+            mockQuestLog.Verify(q => q.AddQuest(It.IsAny<QuestItem>()), Times.Once);
         }
     }
 }
