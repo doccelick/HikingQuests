@@ -1,7 +1,10 @@
 ﻿using HikingQuests.Server.Controllers;
+using HikingQuests.Server.Dtos;
 using HikingQuests.Server.Models;
+using HikingQuests.Server.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.ComponentModel.DataAnnotations;
 
 namespace HikingQuests.Test
 {
@@ -202,75 +205,180 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void UpdateQuestTitle_Correctly_Updates_Quest_Title()
+        public void UpdateQuest_Correctly_Updates_Quest_Title_Only()
         {
             var mockQuestLog = new Mock<IQuestLog>();
-            var existingQuest = new QuestItem("Old Title", "Some Description");
+            var existingId = Guid.NewGuid();
             var controller = new QuestController(mockQuestLog.Object);
-            var newTitle = "New Title";
 
-            controller.AddQuest(existingQuest);
+            var updateQuestDto = new UpdateQuestDto { Title = "Updated Title" };
 
-            var result = controller.UpdateQuestTitle(existingQuest.Id, newTitle);
+            var result = controller.UpdateQuest(existingId, updateQuestDto);
 
-            Assert.IsType<NoContentResult>(result);
 
-            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingQuest.Id, newTitle), Times.Once);
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingId, updateQuestDto.Title), Times.Once);
+            mockQuestLog.Verify(q => q.UpdateQuestDescription(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
-        public void UpdateQuestTitle_Returns_NotFound_For_Invalid_Id()
+        public void UpdateQuest_Correctly_Updates_Quest_Description_Only()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var existingId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var updateQuestDto = new UpdateQuestDto { Description = "Updated Description" };
+
+            var result = controller.UpdateQuest(existingId, updateQuestDto);
+
+
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            mockQuestLog.Verify(q => q.UpdateQuestDescription(existingId, updateQuestDto.Description), Times.Once);
+            mockQuestLog.Verify(q => q.UpdateQuestTitle(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
+        public void UpdateQuest_Correctly_Updates_Both_Quest_Title_And_Description()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var existingId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var updateQuestDto = new UpdateQuestDto { Title = "Updated Title", Description = "Updated Description" };
+
+            var result = controller.UpdateQuest(existingId, updateQuestDto);
+
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingId, updateQuestDto.Title), Times.Once);
+            mockQuestLog.Verify(q => q.UpdateQuestDescription(existingId, updateQuestDto.Description), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateQuest_Updating_Title_Only_Returns_NotFound_For_Invalid_Id()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var invalidId = Guid.NewGuid();
             var controller = new QuestController(mockQuestLog.Object);
-            var newTitle = "New Title";
+
+            var updateQuestDto = new UpdateQuestDto { Title = "Updated Title" };
 
             mockQuestLog
-                .Setup(q => q.UpdateQuestTitle(invalidId, newTitle))
+                .Setup(q => q.UpdateQuestTitle(invalidId, It.IsAny<string>()))
                 .Throws(new KeyNotFoundException());
 
-            var result = controller.UpdateQuestTitle(invalidId, newTitle);
-            
+
+            var result = controller.UpdateQuest(invalidId, updateQuestDto);
+
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
-            mockQuestLog.Verify(q => q.UpdateQuestTitle(invalidId, newTitle), Times.Once);
+            mockQuestLog.Verify(q => q.UpdateQuestTitle(invalidId, updateQuestDto.Title), Times.Once);
         }
 
         [Fact]
-        public void UpdateQuestDescription_Correctly_Updates_Quest_Description()
-        {
-            var mockQuestLog = new Mock<IQuestLog>();
-            var existingQuest = new QuestItem("Old Title", "Some Description");
-            var controller = new QuestController(mockQuestLog.Object);
-            var newTitle = "New Title";
-
-            controller.AddQuest(existingQuest);
-
-            var result = controller.UpdateQuestTitle(existingQuest.Id, newTitle);
-
-            Assert.IsType<NoContentResult>(result);
-
-            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingQuest.Id, newTitle), Times.Once);
-        }
-
-        [Fact]
-        public void UpdateQuestDescription_Returns_NotFound_For_Invalid_Id()
+        public void UpdateQuest_Updating_Description_Only_Returns_NotFound_For_Invalid_Id()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var invalidId = Guid.NewGuid();
             var controller = new QuestController(mockQuestLog.Object);
-            var newDescription = "New Description";
+
+            var updateQuestDto = new UpdateQuestDto { Description = "Updated Description" };
 
             mockQuestLog
-                .Setup(q => q.UpdateQuestDescription(invalidId, newDescription))
+                .Setup(q => q.UpdateQuestDescription(invalidId, It.IsAny<string>()))
                 .Throws(new KeyNotFoundException());
 
-            var result = controller.UpdateQuestDescription(invalidId, newDescription);
-            
+
+            var result = controller.UpdateQuest(invalidId, updateQuestDto);
+
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
-            mockQuestLog.Verify(q => q.UpdateQuestDescription(invalidId, newDescription), Times.Once);
+            mockQuestLog.Verify(q => q.UpdateQuestDescription(invalidId, updateQuestDto.Description), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateQuest_Returns_BadRequest_When_No_Fields_To_Update()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var existingId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var updateQuestDto = new UpdateQuestDto { };
+            
+            var result = controller.UpdateQuest(existingId, updateQuestDto);
+            
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(QuestMessages.NothingToUpdate, badRequestResult.Value);
+        }
+
+        [Fact]
+        public void UpdateQuest_Having_More_Than_100_Characters_In_Title_Returns_BadRequest()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var existingId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+            var longTitle = new string('A', 101);
+            var updateQuestDto = new UpdateQuestDto { Title = longTitle };
+
+            var validationContext = new ValidationContext(updateQuestDto);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(updateQuestDto, validationContext, validationResults, true);
+
+            foreach (var validationResult in validationResults)
+            {
+                controller.ModelState.AddModelError(
+                    validationResult.MemberNames.FirstOrDefault() ?? string.Empty,
+                    validationResult.ErrorMessage ?? string.Empty
+                    );
+            }
+
+            var result = controller.UpdateQuest(existingId, updateQuestDto);
+            
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+
+            var serializableError = badRequestResult.Value as SerializableError;
+            Assert.NotNull(serializableError);
+
+            var error = serializableError
+                .SelectMany(kvp => kvp.Value as string[] ?? Array.Empty<string>())
+                .FirstOrDefault();
+
+            Assert.Equal(QuestMessages.TitleTooLong, error);
+        }
+
+        [Fact]
+        public void UpdateQuest_Having_More_Than_500_Characters_In_Description_Returns_BadRequest()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var existingId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+            var longDescription = new string('A', 501);
+            var updateQuestDto = new UpdateQuestDto { Description = longDescription };
+
+            var validationContext = new ValidationContext(updateQuestDto);
+            var validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(updateQuestDto, validationContext, validationResults, true);
+
+            foreach (var validationResult in validationResults)
+            {
+                controller.ModelState.AddModelError(
+                    validationResult.MemberNames.FirstOrDefault() ?? string.Empty,
+                    validationResult.ErrorMessage ?? string.Empty
+                    );
+            }
+
+            var result = controller.UpdateQuest(existingId, updateQuestDto);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+
+            var serializableError = badRequestResult.Value as SerializableError;
+            Assert.NotNull(serializableError);
+
+            var error = serializableError
+                .SelectMany(kvp => kvp.Value as string[] ?? Array.Empty<string>())
+                .FirstOrDefault();
+
+            Assert.Equal(QuestMessages.DescriptionTooLong, error);
         }
     }
 }
