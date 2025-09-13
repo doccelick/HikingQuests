@@ -85,8 +85,8 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] POST '/quests' -> create a new quest.
 	- [ ] PATCH '/quests/{id}/start' -> start a quest.
 	- [ ] PATCH '/quests/{id}/complete' -> complete a quest.
-	- [ ] PATCH '/quests/{id}' -> update quest title.
-	- [ ] PATCH '/quests/{id}' -> update quest description.
+	- [x] PATCH '/quests/{id}' -> update quest title.
+	- [x] PATCH '/quests/{id}' -> update quest description.
 - [ ] In-memory data storage for quests (no database integration for MVP).
 - [ ] Basic error handling: return correct HTTP status codes for invalid operations.
 
