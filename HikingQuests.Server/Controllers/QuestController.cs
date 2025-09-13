@@ -1,10 +1,12 @@
+using HikingQuests.Server.Dtos;
 using HikingQuests.Server.Models;
+using HikingQuests.Server.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers
-{
-    [Route("api/quests")]
+{    
     [ApiController]
+    [Route("api/quests")]
     public class QuestController : ControllerBase
     {
         private readonly IQuestLog questLog;
@@ -13,11 +15,11 @@ namespace HikingQuests.Server.Controllers
 
         [HttpGet]
         public IActionResult GetQuests() =>
-        HandleDomainExceptions(() =>
-        {
-            var quests = questLog.GetAllQuestItems();
-            return Ok(quests);
-        });
+            HandleDomainExceptions(() =>
+            {
+                var quests = questLog.GetAllQuestItems();
+                return Ok(quests);
+            });
 
         [HttpGet("{id}")]
         public IActionResult GetQuestItemById(Guid id) =>
@@ -35,19 +37,33 @@ namespace HikingQuests.Server.Controllers
                 return CreatedAtAction(nameof(GetQuestItemById), new { id = questItem.Id }, questItem);
             });
 
-        [HttpPatch("{id}/title")]
-        public IActionResult UpdateQuestTitle(Guid id, [FromBody] string newTitle) =>
+        [HttpPatch("{id}")]
+        public IActionResult UpdateQuest(Guid id, [FromBody] UpdateQuestDto updateQuestDto) =>
             HandleDomainExceptions(() =>
             {
-                questLog.UpdateQuestTitle(id, newTitle);
-                return NoContent();
-            });
+                var titleIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Title);
+                var descriptionIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Description);
 
-        [HttpPatch("{id}/description")]
-        public IActionResult UpdateQuestDescription(Guid id, [FromBody] string newDescription) =>
-            HandleDomainExceptions(() =>
-            {
-                questLog.UpdateQuestDescription(id, newDescription);
+                if (titleIsEmpty && descriptionIsEmpty)
+                {
+                    return BadRequest(QuestMessages.NothingToUpdate);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!string.IsNullOrWhiteSpace(updateQuestDto.Title))
+                {
+                    questLog.UpdateQuestTitle(id, updateQuestDto.Title);
+                }
+
+                if (!string.IsNullOrWhiteSpace(updateQuestDto.Description))
+                {
+                    questLog.UpdateQuestDescription(id, updateQuestDto.Description);
+                }
+
                 return NoContent();
             });
 
