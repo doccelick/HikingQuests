@@ -1,4 +1,4 @@
-﻿namespace HikingQuests.Server.Models
+namespace HikingQuests.Server.Constants
 {
     public static class QuestMessages
     {
@@ -9,5 +9,8 @@
         public const string QuestAlreadyExistsInLog = "Quest with same ID already exists in the quest log.";
         public const string QuestNotFound = "Quest not found in the quest log.";
         public const string QuestItemCannotBeNull = "Quest cannot be null.";
+        public const string NothingToUpdate = "At least one field (Title or Description) must be provided for update.";
+        public const string TitleTooLong = "Title cannot exceed 100 characters.";
+        public const string DescriptionTooLong = "Description cannot exceed 500 characters.";
     }
 }
