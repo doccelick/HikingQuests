@@ -1,4 +1,4 @@
-﻿using HikingQuests.Server;
+﻿using HikingQuests.Server.Constants;
 using HikingQuests.Server.Models;
 
 namespace HikingQuests.Test
@@ -59,7 +59,7 @@ namespace HikingQuests.Test
         {
             var questLog = new QuestLog();
 
-            QuestItem? questItem = null;
+            QuestItem? questItem = null!;
 
             Assert.Throws<ArgumentNullException>(() => questLog.AddQuest(questItem));
         }
