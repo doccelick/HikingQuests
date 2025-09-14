@@ -77,7 +77,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] Get All Quests.
 	- [x] Get Quest by ID/Title.
 	- [x] Update Quest (title, description).
-	- [ ] Delete quest
+	- [x] Delete quest
 
 ### Application (ASP.NET Core)
 - [x] Set up ASP.NET Core Web API project
@@ -89,7 +89,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] PATCH '/quests/{id}/complete' -> complete a quest.
 	- [x] PATCH '/quests/{id}' -> update quest title.
 	- [x] PATCH '/quests/{id}' -> update quest description.
-	- [ ] DELETE '/quests/{id}/delete' -> delete a quest.
+	- [x] DELETE '/quests/{id}/delete' -> delete a quest.
 - [x] In-memory data storage for quests (no database integration for MVP).
 - [x] Basic error handling: return correct HTTP status codes for invalid operations.
 
