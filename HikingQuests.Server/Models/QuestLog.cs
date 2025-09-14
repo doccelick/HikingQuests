@@ -57,5 +57,11 @@ namespace HikingQuests.Server.Models
             var questItem = GetQuestById(questId);
             questItem.UpdateDescription(newDescription);
         }
+
+        public void StartQuest(Guid questId)
+        {
+            var questItem = GetQuestById(questId);
+            questItem.StartQuest();
+        }
     }
 }
