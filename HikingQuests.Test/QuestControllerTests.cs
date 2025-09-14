@@ -489,7 +489,7 @@ namespace HikingQuests.Test
 
             var conflictResult = Assert.IsType<ConflictObjectResult>(result);
 
-            Assert.Equal(QuestMessages.QuestAlreadyInProgress, conflictResult.Value);
+            Assert.Equal(QuestMessages.QuestNotInProgress, conflictResult.Value);
         }
 
         [Fact]

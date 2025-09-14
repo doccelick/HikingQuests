@@ -89,6 +89,28 @@ namespace HikingQuests.Server.Controllers
             }
         }
 
+        [HttpPatch("{id}/complete")]
+        public IActionResult CompleteQuest(Guid id)
+        {
+            try
+            {
+                questLog.CompleteQuest(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(QuestMessages.QuestNotFound);
+            }
+            catch (InvalidOperationException ex) when (ex.Message == QuestMessages.QuestNotInProgress)
+            {
+                return Conflict(QuestMessages.QuestNotInProgress);
+            }
+            catch (InvalidOperationException ex) when (ex.Message == QuestMessages.QuestAlreadyCompleted)
+            {
+                return Conflict(QuestMessages.QuestAlreadyCompleted);
+            }
+        }
+
         //TODO: Reconsider this generic approach.
         //It might make more sense to handle exceptions explicitly in each function to get accurate messages.
         private IActionResult HandleDomainExceptions(Func<IActionResult> action)

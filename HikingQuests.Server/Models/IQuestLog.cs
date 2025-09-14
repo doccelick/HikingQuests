@@ -9,5 +9,6 @@
         void UpdateQuestTitle(Guid id, string newTitle);
         void UpdateQuestDescription(Guid id, string newDescription);
         void StartQuest(Guid id);
+        void CompleteQuest(Guid id);
     }
 }
