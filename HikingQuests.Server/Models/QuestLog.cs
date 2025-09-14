@@ -1,4 +1,6 @@
-﻿namespace HikingQuests.Server.Models
+﻿using HikingQuests.Server.Constants;
+
+namespace HikingQuests.Server.Models
 {
     public class QuestLog : IQuestLog
     {
@@ -54,6 +56,18 @@
         {
             var questItem = GetQuestById(questId);
             questItem.UpdateDescription(newDescription);
+        }
+
+        public void StartQuest(Guid questId)
+        {
+            var questItem = GetQuestById(questId);
+            questItem.StartQuest();
+        }
+
+        public void CompleteQuest(Guid questId)
+        {
+            var questItem = GetQuestById(questId);
+            questItem.CompleteQuest();
         }
     }
 }

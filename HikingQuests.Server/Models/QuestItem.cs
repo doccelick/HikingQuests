@@ -1,4 +1,6 @@
-﻿namespace HikingQuests.Server.Models
+﻿using HikingQuests.Server.Constants;
+
+namespace HikingQuests.Server.Models
 {
     public class QuestItem
     {
@@ -46,6 +48,16 @@
 
         public void StartQuest()
         {
+            if (Status == QuestStatus.InProgress)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestAlreadyInProgress);
+            }
+
+            if (Status == QuestStatus.Completed)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestAlreadyCompleted);
+            }
+
             Status = QuestStatus.InProgress;
         }
 
@@ -56,7 +68,7 @@
                 throw new InvalidOperationException(QuestMessages.QuestAlreadyCompleted);
             }
 
-            if (Status != QuestStatus.InProgress)
+            if (Status == QuestStatus.Planned)
             {
                 throw new InvalidOperationException(QuestMessages.QuestNotInProgress);
             }
