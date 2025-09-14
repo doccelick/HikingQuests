@@ -9,7 +9,7 @@ namespace HikingQuests.Test
         private string template_description = "Walk 5 km following a forest path.";
 
         [Fact]
-        public void QuestLog_Initial_Quest_Count_Is_Zero()
+        public void Initial_Quest_Count_Is_Zero()
         {
             var questLog = new QuestLog();
             var questCount = questLog.GetAllQuestItems().Count();
@@ -18,7 +18,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_A_Single_QuestItem_Added_Increases_Quest_Count_To_One()
+        public void A_Single_QuestItem_Added_Increases_Quest_Count_To_One()
         {
             var questLog = new QuestLog();
             var questItem = new QuestItem(template_title, template_description);
@@ -30,7 +30,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_A_Single_QuestItem_Added_Can_Be_Retrieved_By_ID()
+        public void A_Single_QuestItem_Added_Can_Be_Retrieved_By_ID()
         {
             var questLog = new QuestLog();
             var questItem = new QuestItem(template_title, template_description);
@@ -44,7 +44,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_A_Single_QuestItem_Added_Can_Be_Retrieved_By_Title()
+        public void A_Single_QuestItem_Added_Can_Be_Retrieved_By_Title()
         {
             var questLog = new QuestLog();
             var questItem = new QuestItem(template_title, template_description);
@@ -55,7 +55,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Adding_A_Null_QuestItem_Throws_Exception()
+        public void Adding_A_Null_QuestItem_Throws_Exception()
         {
             var questLog = new QuestLog();
 
@@ -65,7 +65,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Adding_Duplicate_QuestItem_Throws_Exception()
+        public void Adding_Duplicate_QuestItem_Throws_Exception()
         {
             var questLog = new QuestLog();
             var questItem = new QuestItem(template_title, template_description);
@@ -76,7 +76,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Getting_Nonexistent_QuestItem_By_ID_Throws_Exception()
+        public void Getting_Nonexistent_QuestItem_By_ID_Throws_Exception()
         {
             var questLog = new QuestLog();
             var nonExistentQuestId = Guid.NewGuid();
@@ -85,7 +85,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Getting_Nonexistent_QuestItem_By_Empty_Guid_Throws_Exception()
+        public void Getting_Nonexistent_QuestItem_By_Empty_Guid_Throws_Exception()
         {
             var questLog = new QuestLog();
             var nonExistentQuestId = Guid.Empty;
@@ -94,7 +94,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Getting_Nonexistent_QuestItem_By_Title_Throws_Exception()
+        public void Getting_Nonexistent_QuestItem_By_Title_Throws_Exception()
         {
             var questLog = new QuestLog();
             var nonExistentTitle = "Nonexistent Quest";
@@ -103,7 +103,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Adding_QuestItem_With_Same_Title_But_Different_ID_Is_Allowed()
+        public void Adding_QuestItem_With_Same_Title_But_Different_ID_Is_Allowed()
         {
             var questLog = new QuestLog();
             var questItem1 = new QuestItem(template_title, template_description);
@@ -117,7 +117,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Adding_Multiple_QuestItems_Increases_Quest_Count_Accordingly()
+        public void Adding_Multiple_QuestItems_Increases_Quest_Count_Accordingly()
         {
             var questLog = new QuestLog();
             var questItem1 = new QuestItem(template_title, template_description);
@@ -131,7 +131,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_QuestItems_Are_Enumerable()
+        public void QuestItems_Are_Enumerable()
         {
             var questLog = new QuestLog();
             var questItem1 = new QuestItem(template_title, template_description);
@@ -152,7 +152,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_GetAllQuests_Returns_All_Added_QuestItems()
+        public void GetAllQuests_Returns_All_Added_QuestItems()
         {
             var questLog = new QuestLog();
             var questItem1 = new QuestItem(template_title, template_description);
@@ -172,7 +172,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_GetAllQuests_On_Empty_Log_Returns_Empty_Collection()
+        public void GetAllQuests_On_Empty_Log_Returns_Empty_Collection()
         {
             var questLog = new QuestLog();
             var allQuests = questLog.GetAllQuestItems();
@@ -180,7 +180,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Can_Update_QuestItem_Title()
+        public void Can_Update_QuestItem_Title()
         {
             var questLog = new QuestLog();
             var questItem = new QuestItem("Original Title", template_description);
@@ -197,7 +197,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Can_Update_QuestItem_Description()
+        public void Can_Update_QuestItem_Description()
         {
             var questLog = new QuestLog();
             var questItem = new QuestItem(template_title, "Original Description");
@@ -213,7 +213,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Updating_Title_Of_Nonexistent_QuestItem_Throws_Exception()
+        public void Updating_Title_Of_Nonexistent_QuestItem_Throws_Exception()
         {
             var questLog = new QuestLog();
             var nonExistentQuestId = Guid.NewGuid();
@@ -224,7 +224,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void QuestLog_Updating_Description_Of_Nonexistent_QuestItem_Throws_Exception()
+        public void Updating_Description_Of_Nonexistent_QuestItem_Throws_Exception()
         {
             var questLog = new QuestLog();
             var nonExistentQuestId = Guid.NewGuid();
