@@ -409,6 +409,106 @@ namespace HikingQuests.Test
             Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
         }
 
-        //TODO: add more tests for edge cases related to starting quests
+        [Fact]
+        public void StartQuest_Returns_Conflict_When_Quest_Already_In_Progress()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var questId = Guid.NewGuid();
+
+            mockQuestLog.Setup(q => q.StartQuest(questId))
+                .Throws(new InvalidOperationException(QuestMessages.QuestAlreadyInProgress));
+
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var result = controller.StartQuest(questId);
+
+            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+
+            Assert.Equal(QuestMessages.QuestAlreadyInProgress, conflictResult.Value);
+        }
+
+        [Fact]
+        public void StartQuest_Returns_Conflict_When_Quest_Already_Completed()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var questId = Guid.NewGuid();
+
+            mockQuestLog.Setup(q => q.StartQuest(questId))
+                .Throws(new InvalidOperationException(QuestMessages.QuestAlreadyCompleted));
+
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var result = controller.StartQuest(questId);
+
+            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+
+            Assert.Equal(QuestMessages.QuestAlreadyCompleted, conflictResult.Value);
+        }
+
+        [Fact]
+        public void CompleteQuest_Calls_QuestLog_CompleteQuest_And_Returns_NoContent()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var questId = Guid.NewGuid();
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var result = controller.CompleteQuest(questId);
+
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+
+            mockQuestLog.Verify(q => q.CompleteQuest(questId), Times.Once());
+        }
+
+        [Fact]
+        public void CompleteQuest_Returns_NotFound_When_Quest_Does_Not_Exist()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var invalidId = Guid.NewGuid();
+            mockQuestLog.Setup(q => q.CompleteQuest(invalidId))
+                         .Throws(new KeyNotFoundException());
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var result = controller.CompleteQuest(invalidId);
+
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
+        }
+
+        [Fact]
+        public void CompleteQuest_Returns_Conflict_When_Quest_Not_In_Progress()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var questId = Guid.NewGuid();
+
+            mockQuestLog.Setup(q => q.CompleteQuest(questId))
+                .Throws(new InvalidOperationException(QuestMessages.QuestNotInProgress));
+
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var result = controller.CompleteQuest(questId);
+
+            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+
+            Assert.Equal(QuestMessages.QuestAlreadyInProgress, conflictResult.Value);
+        }
+
+        [Fact]
+        public void CompleteQuest_Returns_Conflict_When_Quest_Already_Completed()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var questId = Guid.NewGuid();
+
+            mockQuestLog.Setup(q => q.CompleteQuest(questId))
+                .Throws(new InvalidOperationException(QuestMessages.QuestAlreadyCompleted));
+
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var result = controller.CompleteQuest(questId);
+
+            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+
+            Assert.Equal(QuestMessages.QuestAlreadyCompleted, conflictResult.Value);
+        }
+
     }
 }
