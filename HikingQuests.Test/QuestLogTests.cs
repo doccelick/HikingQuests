@@ -232,5 +232,43 @@ namespace HikingQuests.Test
             var exception = Assert.Throws<KeyNotFoundException>(() => questLog.UpdateQuestDescription(nonExistentQuestId, newDescription));
             Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
         }
+
+        [Fact]
+        public void Deleting_A_Quest_Successfully_Removes_The_Quest_From_Dictionary()
+        {
+            var questLog = new QuestLog();
+            var initialQuest = new QuestItem(template_title, template_description);
+
+            questLog.AddQuest(initialQuest);
+            
+            Assert.NotEmpty(questLog.GetAllQuestItems());
+
+            questLog.DeleteQuest(initialQuest.Id);
+
+            Assert.Empty(questLog.GetAllQuestItems());
+        }
+
+        [Fact]
+        public void Deleting_A_Nonexistent_Quest_From_Populated_Log_Throws_KeyNotFoundException()
+        {
+            var questLog = new QuestLog();
+            var existingQuest = new QuestItem(template_title, template_description);
+            var nonExistentQuestId = Guid.NewGuid();
+
+            questLog.AddQuest(existingQuest);
+
+            var exception = Assert.Throws<KeyNotFoundException>(() => questLog.DeleteQuest(nonExistentQuestId));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
+        }
+
+        [Fact]
+        public void Deleting_A_Nonexistent_Quest_From_Empty_Log_Throws_KeyNotFoundException()
+        {
+            var questLog = new QuestLog();
+            var nonExistentQuestId = Guid.NewGuid();
+
+            var exception = Assert.Throws<KeyNotFoundException>(() => questLog.DeleteQuest(nonExistentQuestId));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
+        }
     }
 }
