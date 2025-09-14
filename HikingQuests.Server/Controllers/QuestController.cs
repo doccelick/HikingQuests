@@ -111,6 +111,20 @@ namespace HikingQuests.Server.Controllers
             }
         }
 
+        [HttpDelete("{id}/delete")]
+        public IActionResult DeleteQuest(Guid id)
+        {
+            try
+            {
+                questLog.DeleteQuest(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(QuestMessages.QuestNotFound);
+            }
+        }
+
         //TODO: Reconsider this generic approach.
         //It might make more sense to handle exceptions explicitly in each function to get accurate messages.
         private IActionResult HandleDomainExceptions(Func<IActionResult> action)

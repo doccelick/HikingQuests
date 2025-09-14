@@ -2,7 +2,7 @@
 
 ## Project Overview (MVP)
 Build a minimal viable product (MVP) for HikingQuests, a web application that allows users to discover, create, and share hiking quests. 
-The application will allow users to view a list of quests, see details for each quest, and create new quests.
+The application will allow users to view a list of quests, see details for each quest, create new quests and update/delete a quest.
 Focus on TDD (Test Driven Development), domain modeling, API and a simple user interface.
 
 **Tools and Technologies**: C#, ASP.NET Core, xUnit, Moq, HTML/CSS, React, TypeScript.
@@ -21,6 +21,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 
 ## Out of Scope for MVP
 - User authentication and authorization
+- Admin privileges
 - Database integration
 - Advanced search and filtering
 - Image upload functionality
@@ -76,6 +77,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] Get All Quests.
 	- [x] Get Quest by ID/Title.
 	- [x] Update Quest (title, description).
+	- [x] Delete quest
 
 ### Application (ASP.NET Core)
 - [x] Set up ASP.NET Core Web API project
@@ -87,6 +89,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] PATCH '/quests/{id}/complete' -> complete a quest.
 	- [x] PATCH '/quests/{id}' -> update quest title.
 	- [x] PATCH '/quests/{id}' -> update quest description.
+	- [x] DELETE '/quests/{id}/delete' -> delete a quest.
 - [x] In-memory data storage for quests (no database integration for MVP).
 - [x] Basic error handling: return correct HTTP status codes for invalid operations.
 
@@ -100,6 +103,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 - [ ] Create Quest Form.
 - [ ] Update Quest Status.
 - [ ] Edit Quest Form.
+- [ ] Delete Quest.
 - [ ] API Integration.
 - [ ] Error Handling.
 - [ ] Basic Styling.
@@ -112,7 +116,7 @@ The MVP is considered **complete** when the following criteria are met:
 
 1. **Domain Layer**
 	- A 'QuestItem' class exists with methods to start and complete quests, along with appropriate validation and unit tests.
-	- A 'QuestLog' class exists to manage a collection of quests, with methods to add and retrieve quests, along with appropriate validation and unit tests.
+	- A 'QuestLog' class exists to manage a collection of quests with methods to add, retrieve, update and delete quests, along with appropriate validation and unit tests.
 
 2. **API Layer**
 	- A Working 'QuestController' exposes endpoints to:
@@ -121,6 +125,7 @@ The MVP is considered **complete** when the following criteria are met:
 		- Create a quest (POST '/quests').
 		- Start a quest (PATCH '/quests/{id}/start').
 		- Complete a quest (PATCH '/quests/{id}/complete').
+		- Delete a quest (DELETE '/quests/{id}/delete').
 	- Endpoints return appropriate HTTP status codes and error messages for invalid operations.
 
 3. **Frontend Layer**
@@ -129,6 +134,7 @@ The MVP is considered **complete** when the following criteria are met:
 	- Users can create new quests via a form that submits data to the API.
 	- Users can start and complete quests using buttons that trigger API calls.
 	- Users can edit quest titles and descriptions via a form that submits updates to the API.
+	- Users can delete quests via a button that trigger an API call. (may be restricted by admin access post-MVP)
 	- Basic error handling is implemented, providing user feedback for API interactions.
 	- UI has basic styling for a clean and user-friendly interface.
 
@@ -136,4 +142,4 @@ The MVP is considered **complete** when the following criteria are met:
 	- Code is developed following TDD principles, with tests written before implementation.
 	- Git is used for version control with clear commit messages and small, focused pull requests.
 	- Project plan is updated as needed to reflect changes in scope or requirements.
-	- A short demo of viewing, creating, starting, and completing quests can be performed end-to-end.
+	- A short demo of creating, viewing, editing, starting, completing and deleting quests can be performed end-to-end.
