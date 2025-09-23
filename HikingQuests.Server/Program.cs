@@ -1,11 +1,22 @@
+using HikingQuests.Server.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// In-memory singleton
+builder.Services.AddSingleton<IQuestLog>(sp =>
+{
+    var questLog = new QuestLog();
+
+    questLog.AddQuest(new QuestItem("Walk 5 km", "Walk 5 km or more on a forest path."));
+    questLog.AddQuest(new QuestItem("Catch a trout", "Catch a trout with a fishing rod."));
+    questLog.AddQuest(new QuestItem("Sleep in a tent", "Spend at least 1 night in the forest sleeping in a tent."));
+
+    return questLog;
+});
 
 var app = builder.Build();
 

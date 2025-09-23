@@ -95,10 +95,10 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 
 ### UI (React + TypeScript)
 - [x] Set up React project with TypeScript.
-- [ ] Quest List View.
-	- [ ] Render static list of quests.
-	- [ ] Fetch quests from API.
-	- [ ] Display status and title.
+- [x] Quest List View.
+	- [x] Render static list of quests.
+	- [x] Fetch quests from API.
+	- [x] Display status, title and description.
 - [ ] Quest Detail View.
 - [ ] Create Quest Form.
 - [ ] Update Quest Status.

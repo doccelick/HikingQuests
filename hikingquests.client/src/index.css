@@ -18,8 +18,21 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
+}
+
+li {
+  text-align: left;
+}
+
+ul {
+  text-align: left;
+}
+
+ol {
+  text-align: left;
 }
 
 body {
@@ -46,9 +59,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -59,10 +74,66 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
+}
+
+.quest-list {
+  list-style: none;
+  padding: 0;
+}
+
+.quest-item {
+  margin-bottom: 0.5rem;
+}
+
+.quest-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  border: 3px solid #0a0a0a;
+  border-radius: 0.5rem;
+  background-color: #413f3f;
+  transition: transform 0.25s, background-color 0.25s;
+}
+
+.quest-card:hover {
+  transform: scale(1.05);
+  background-color: #1d1c1c;
+}
+
+.quest-title {
+  font-size: 1.25rem;
+}
+
+.quest-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.quest-status {
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.quest-status--planned {
+  color: gray;
+}
+
+.quest-status--inprogress {
+  color: orange;
+}
+
+.quest-status--completed {
+  color: green;
+}
+
+.quest-description {
+  font-weight: 200;
 }
