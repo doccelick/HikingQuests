@@ -11,8 +11,9 @@
 .quest-card:hover {
     transform: scale(1.01);
     background-color: #163a0e;
+    border-color: #646cff;
+    cursor: pointer;
 }
-
 
 .quest-card-expanded {
     transform: scale(1.01);
