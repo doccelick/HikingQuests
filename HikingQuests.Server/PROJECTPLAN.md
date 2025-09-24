@@ -99,7 +99,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 	- [x] Render static list of quests.
 	- [x] Fetch quests from API.
 	- [x] Display status, title and description.
-- [ ] Quest Detail View.
+- [x] Quest Detail View.
 - [ ] Create Quest Form.
 - [ ] Update Quest Status.
 - [ ] Edit Quest Form.
