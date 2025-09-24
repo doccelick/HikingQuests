@@ -16,6 +16,11 @@
     gap: 0.2rem;
 }
 
+.add-quest-button-container {
+    display: flex;
+    justify-content: center;
+}
+
 h2 {
     text-align: center;
 }

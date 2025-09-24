@@ -1,19 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuests } from "../hooks/useQuests";
 import { QuestCard } from "./QuestCard";
 import clsx from "clsx";
 import styles from "./QuestList.module.css";
+import type { QuestItem } from "../types/QuestItem";
+import { AddQuestForm } from "./AddQuestForm";
 
 export const QuestList: React.FC = () => {
-    const { quests, loading, error } = useQuests();
+    const { quests: fetchedQuests, loading, error } = useQuests();
     const [expandedId, setExpandedId] = useState<string | null>(null);
+    const [quests, setQuests] = useState<QuestItem[]>(fetchedQuests)
+    const [showCreationForm, setShowCreationForm] = useState(false);
 
-    if (loading) return <p className={styles.loading}>Loading quests...</p>;
-    if (error) return <p className={styles.error}>{error}</p>;
+    useEffect(() => {
+        setQuests(fetchedQuests);
+    },
+        [fetchedQuests]
+    );
+
+    const handleQuestAdded = (newQuest: QuestItem) => {
+        setQuests((prev) => [...prev, newQuest]);
+        setShowCreationForm(false);
+    };
 
     return (
         <div className={clsx(styles["quest-container"])}>
             <h2>Quest List</h2>
+            {loading && <p>Loading data...</p>}
+            {error && <p>Error: {error}</p>}
+            <div className={clsx(styles["add-quest-button-container"])}>
+                {!showCreationForm && (
+                    <button className="primary" onClick={() => setShowCreationForm(true)}>Add Quest</button>
+                )}
+            </div>
+            {showCreationForm && (
+                <AddQuestForm
+                    onQuestAdded={handleQuestAdded}
+                    onCancel={() => setShowCreationForm(false)}
+                />
+            )}
+
             <ul className={clsx(styles["quest-list"])}>
                 {quests.map((quest) => (
                     <QuestCard

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import type { QuestItem } from "../hooks/useQuests";
 import { getStatusInfo } from "../types/QuestStatus";
 import clsx from "clsx";
 import styles from "./QuestCard.module.css"
+import type { QuestItem } from "../types/QuestItem";
 
 interface QuestCardProperties {
     quest: QuestItem;
@@ -16,7 +16,6 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
     const statusInfo = getStatusInfo(quest.status);
     const descriptionRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState("0px");
-
 
     useEffect(() => {
         if (expanded && descriptionRef.current) {

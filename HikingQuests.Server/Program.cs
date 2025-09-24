@@ -1,10 +1,15 @@
 using HikingQuests.Server.Models;
+using HikingQuests.Server.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ApiExceptionFilter>();
+});
 
 // In-memory singleton
 builder.Services.AddSingleton<IQuestLog>(sp =>

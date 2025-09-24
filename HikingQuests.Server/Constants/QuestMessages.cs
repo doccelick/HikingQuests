@@ -14,5 +14,6 @@ namespace HikingQuests.Server.Constants
         public const string NothingToUpdate = "At least one field (Title or Description) must be provided for update.";
         public const string TitleTooLong = "Title cannot exceed 100 characters.";
         public const string DescriptionTooLong = "Description cannot exceed 500 characters.";
+        public const string UnexpectedError = "An unexpected error occured";
     }
 }
