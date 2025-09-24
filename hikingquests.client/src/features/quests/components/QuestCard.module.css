@@ -10,7 +10,17 @@
 
 .quest-card:hover {
     transform: scale(1.01);
-    background-color: #1d1c1c;
+    background-color: #163a0e;
+}
+
+
+.quest-card-expanded {
+    transform: scale(1.01);
+    background-color: #236b14;
+}
+
+.quest-card:focus {
+    background-color: #236b14;
 }
 
 .quest-header {
@@ -43,4 +53,15 @@
 
 .quest-description {
     font-weight: 200;
+}
+
+.quest-description-container {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.25s ease-in;
+}
+
+.quest-description-container.expanded {
+    max-height: 200px;
+    opacity: 1;
 }
