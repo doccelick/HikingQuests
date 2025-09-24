@@ -14,6 +14,8 @@ builder.Services.AddSingleton<IQuestLog>(sp =>
     questLog.AddQuest(new QuestItem("Walk 5 km", "Walk 5 km or more on a forest path."));
     questLog.AddQuest(new QuestItem("Catch a trout", "Catch a trout with a fishing rod."));
     questLog.AddQuest(new QuestItem("Sleep in a tent", "Spend at least 1 night in the forest sleeping in a tent."));
+    questLog.AddQuest(new QuestItem("Build a campfire", "Build a campfire using materials you find around the camp."));
+    questLog.AddQuest(new QuestItem("Find a porcini mushroom", "Locate a porcini mushroom in the forest."));
 
     return questLog;
 });
