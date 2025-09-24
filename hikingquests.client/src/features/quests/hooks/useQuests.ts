@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
-import { QuestStatus } from "../types/QuestStatus";
+import type { QuestItem } from "../types/QuestItem";
 
-export interface QuestItem {
-    id: string;
-    title: string;
-    description: string;
-    status: QuestStatus;
-}
 
 const serverUrl = "/api/quests";
 
