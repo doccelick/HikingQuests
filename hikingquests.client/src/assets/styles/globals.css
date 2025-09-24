@@ -20,3 +20,44 @@ h1 {
     line-height: 1.1;
     text-align: center;
 }
+
+textarea {
+    resize: vertical;
+    min-height: 3rem;
+}
+
+button.primary {
+    border-radius: 0.5rem;
+    padding: 0.5em;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 3px solid #0a0a0a;
+    background-color: #413f3f;
+    transition: background-color 0.2s, border-color 0.25s, transform 0.2s;
+}
+
+button.secondary {
+    border-radius: 0.5rem;
+    padding: 0.5em;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 3px solid #0a0a0a;
+    background-color: #8b1313;
+    transition: background-color 0.2s, border-color 0.25s, transform 0.2s;
+}
+
+button:hover {
+    border-color: #646cff;
+    background-color: #163a0e;
+}
+
+button.secondary:hover {
+    border-color: #646cff;
+    background-color: #550e0e;
+}
+
+button:active {
+    transform: scale(0.8);
+}
