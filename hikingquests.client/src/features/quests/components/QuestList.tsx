@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useQuests } from "../hooks/useQuests";
+import { useQuests } from "../hooks";
 import { QuestCard } from "./QuestCard";
 import clsx from "clsx";
 import styles from "./QuestList.module.css";
-import type { QuestItem } from "../types/QuestItem";
+import type { QuestItem } from "../types";
 import { AddQuestForm } from "./AddQuestForm";
 
 export const QuestList: React.FC = () => {
-    const { quests: fetchedQuests, loading, error, startQuestHandler, completeQuestHandler } = useQuests();
+    const {
+        quests: fetchedQuests,
+        loading, error,
+        startQuestHandler,
+        completeQuestHandler,
+        updateQuestHandler
+    } = useQuests();
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [quests, setQuests] = useState<QuestItem[]>([]);
     const [showCreationForm, setShowCreationForm] = useState(false);
@@ -51,6 +57,14 @@ export const QuestList: React.FC = () => {
                         }
                         onStartQuest={() => startQuestHandler(quest.id)}
                         onCompleteQuest={() => completeQuestHandler(quest.id)}
+                        onUpdateQuest={async (questId, updatedQuestData) => {
+                            await updateQuestHandler(questId, updatedQuestData);
+                            setQuests((prevQuests) =>
+                                prevQuests.map((q) =>
+                                    q.id === questId ? { ...q, ...updatedQuestData } : q
+                                )
+                            );
+                        }}
                     />
                 ))}
             </ul>
