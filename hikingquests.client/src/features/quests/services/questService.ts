@@ -36,3 +36,26 @@ export async function addQuest(newQuest: NewQuestPayload): Promise<QuestItem> {
     }
     return data as QuestItem;
 }
+
+export async function startQuest(questId: string): Promise<QuestItem> {
+    const url = `/api/quests/${questId}/start`;
+
+    const response = await fetch(url, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    let data: unknown;
+    try {
+        data = await response.json();
+    } catch {
+        data = {};
+    }
+
+    if (!response.ok) {
+        const message = (data as ErrorResponseDto)?.message || "An unexpected error occurred";
+        throw new Error(message);
+    }
+
+    return data as QuestItem;
+}
