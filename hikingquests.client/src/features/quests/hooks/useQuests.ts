@@ -7,7 +7,7 @@ export function useQuests() {
 
     const { data, loading, error, refetch } = useRetryableFetch<QuestItem[]>(getQuests, {
         retries: 5,
-        delay: 500,
+        delay: 1000,
     });
 
     const startQuestHandler = (id: string) => startQuest(id).then(refetch);

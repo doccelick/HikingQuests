@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface RetryOptions {
     retries?: number;
@@ -13,41 +13,39 @@ export function useRetryableFetch<T>(
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            try {
+                const result = await fetchFn();
+                setData(result);
+                setLoading(false);
+                setError(null);
+                return;
+            } catch (err) {
+                if (attempt === retries) {
+                    setError((err as Error).message || "Failed after retries");
+                    setLoading(false);
+                } else {
+                    await new Promise((res) => setTimeout(res, delay));
+                }
+            }
+        }
+    }, [fetchFn, retries, delay]);
+
     useEffect(() => {
         let cancelled = false;
 
-        const attemptFetch = async () => {
-            setLoading(true);
-            setError(null);
-
-            for (let attempt = 0; attempt <= retries; attempt++) {
-                try {
-                    const result = await fetchFn();
-                    if (!cancelled) {
-                        setData(result);
-                        setError(null);
-                        setLoading(false);
-                    }
-                    return;
-                } catch (err) {
-                    if (attempt === retries) {
-                        if (!cancelled) {
-                            setError((err as Error).message || "Failed after retries");
-                            setLoading(false);
-                        }
-                    } else {
-                        await new Promise((res) => setTimeout(res, delay));
-                    }
-                }
-            }
-        };
-
-        attemptFetch();
+        fetchData().then(() => {
+            if (cancelled) return;
+        });
 
         return () => {
             cancelled = true;
         };
-    }, [fetchFn, retries, delay]);
+    }, [fetchData]);
 
-    return { data, loading, error };
+    return { data, loading, error, refetch: fetchData };
 }
