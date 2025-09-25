@@ -5,4 +5,5 @@ export interface QuestCardProperties {
     expanded: boolean;
     onExpandToggle: () => void;
     onStartQuest: () => void;
+    onCompleteQuest: () => void;
 }
