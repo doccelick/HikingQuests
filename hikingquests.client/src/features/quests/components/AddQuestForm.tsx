@@ -3,6 +3,7 @@ import { addQuest as addQuestService } from "../services/questService";
 import type { QuestItem } from "../types/QuestItem";
 import styles from "./AddQuestForm.module.css";
 import clsx from "clsx";
+import { useTimedMessages } from "../hooks";
 
 interface AddQuestFormProperties {
     onQuestAdded: (quest: QuestItem) => void;
@@ -15,7 +16,7 @@ export const AddQuestForm: React.FC<AddQuestFormProperties> = ({
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { messages, showMessage } = useTimedMessages(0);
 
     const handleAdd = async () => {
         setLoading(true);
@@ -23,20 +24,22 @@ export const AddQuestForm: React.FC<AddQuestFormProperties> = ({
         try {
             const newQuest = await addQuestService({ title, description });
             onQuestAdded(newQuest);
-
-
             setTitle("");
             setDescription("");
         } catch (err) {
-            setError((err as Error).message)
+            showMessage((err as Error).message, "error", 2000)
         } finally {
             setLoading(false);
         }
     };
 
+    const firstError = messages.find(
+        m => m.type === "error" && m.text.trim() !== ""
+    );
+
     return (
         <div className={clsx(styles["add-quest-form"])}>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {<p style={{ color: "red" }}>{firstError?.text}</p>}
 
             <input
                 type="text"
@@ -64,7 +67,7 @@ export const AddQuestForm: React.FC<AddQuestFormProperties> = ({
                 </button>
                 <button
                     type="button"
-                    className="secondary"
+                    className="tertiary"
                     onClick={onCancel}
                     disabled={loading}
                 >
