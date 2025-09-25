@@ -1,14 +1,9 @@
 import { useState } from "react";
-import { addQuest as addQuestService } from "../services/questService";
-import type { QuestItem } from "../types/QuestItem";
+import { addQuest as addQuestService } from "../services";
 import styles from "./AddQuestForm.module.css";
 import clsx from "clsx";
 import { useTimedMessages } from "../hooks";
-
-interface AddQuestFormProperties {
-    onQuestAdded: (quest: QuestItem) => void;
-    onCancel: () => void;
-}
+import type { AddQuestFormProperties } from "../types";
 
 export const AddQuestForm: React.FC<AddQuestFormProperties> = ({
     onQuestAdded, onCancel
@@ -41,36 +36,32 @@ export const AddQuestForm: React.FC<AddQuestFormProperties> = ({
         <div className={clsx(styles["add-quest-form"])}>
             {<p style={{ color: "red" }}>{firstError?.text}</p>}
 
-            <input
-                type="text"
+            <input type="text"
                 placeholder="Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                disabled={loading}
-            />
+                disabled={loading} />
 
-            <textarea
-                placeholder="Description"
+            <textarea placeholder="Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                disabled={loading}
-            />
+                disabled={loading} />
 
             <div className={clsx(styles["form-buttons"])}>
+
                 <button
                     type="button"
                     className="primary"
                     onClick={handleAdd}
-                    disabled={loading}
-                >
+                    disabled={loading}>
                     Add Quest
                 </button>
+
                 <button
                     type="button"
                     className="tertiary"
                     onClick={onCancel}
-                    disabled={loading}
-                >
+                    disabled={loading}>
                     Cancel
                 </button>
             </div>
