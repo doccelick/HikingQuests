@@ -52,11 +52,6 @@ button {
     transition: background-color 0.2s, border-color 0.25s, transform 0.2s;
 }
 
-button:hover {
-    transform: scale(1.05);
-    background-color: #333333;
-}
-
 button.primary {
     background-color: #116315;
 }
@@ -69,18 +64,21 @@ button.tertiary {
     background-color: #8b1313;
 }
 
-button.primary:hover {
+button:hover {
     border-color: #646cff;
+    transform: scale(1.05);
+    background-color: #333333;
+}
+
+button.primary:hover {
     background-color: #1f5014;
 }
 
 button.secondary:hover {
-    border-color: #646cff;
     background-color: #373a11;
 }
 
 button.tertiary:hover {
-    border-color: #646cff;
     background-color: #501111;
 }
 
@@ -90,15 +88,15 @@ button:active {
 
 .error-message {
     color: red;
-    font-size: 0.9rem;
+    text-align: center;
 }
 
 .info-message {
     color: yellow;
-    font-size: 0.9rem;
+    text-align: center;
 }
 
 .success-message {
-    color: green;
-    font-size: 0.9rem;
+    color: #2de62d;
+    text-align: center;
 }

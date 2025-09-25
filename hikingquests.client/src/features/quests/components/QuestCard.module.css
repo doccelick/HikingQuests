@@ -9,10 +9,26 @@
     transition: transform 0.25s, background-color 0.25s;
 }
 
+.quest-card--planned {
+    border: 3px solid #1a1818;
+    background-color: #474e53
+}
+
+.quest-card--inprogress {
+    border: 3px solid #1a1818;
+    background-color: #586b25;
+    color: #ccf166;
+}
+
+.quest-card--completed {
+    border: 3px solid #1a1818;
+    background-color: #07330b;
+    color: #749b74;
+}
+
 .quest-card-expanded {
     transform: scale(1.01);
-    border: 3px solid #1a1818;
-    background-color: #4b5249;
+    border: 3px solid #bcc5c5;
 }
 
 .quest-header {
@@ -27,7 +43,7 @@
 
 .quest-description {
 
-    font-weight: 200;
+    font-weight: 400;
     overflow-wrap: anywhere;
     word-break: break-all;
     white-space: normal;
@@ -48,20 +64,20 @@
 
 .quest-status {
     font-size: 0.85rem;
-    font-weight: 400;
+    font-weight: 600;
     font-style: italic;
 }
 
 .quest-status--planned {
-    color: gray;
+    color: #909faa
 }
 
 .quest-status--inprogress {
-    color: orange;
+    color: #afeb0b
 }
 
 .quest-status--completed {
-    color: green;
+    color: #32b13c;
 }
 
 .quest-format-button-container {
