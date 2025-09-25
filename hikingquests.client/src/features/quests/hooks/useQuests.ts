@@ -1,6 +1,7 @@
 import type { QuestItem } from "../types/QuestItem";
 import { getQuests, startQuest } from "../services";
 import { useRetryableFetch } from "./useRetryableFetch";
+import { useMemo } from "react";
 
 export function useQuests() {
 
@@ -11,8 +12,10 @@ export function useQuests() {
 
     const startQuestHandler = (id: string) => startQuest(id).then(refetch);
 
+    const quests = useMemo(() => data ?? [], [data]);
+
     return {
-        quests: data ?? [],
+        quests,
         loading,
         error,
         startQuestHandler

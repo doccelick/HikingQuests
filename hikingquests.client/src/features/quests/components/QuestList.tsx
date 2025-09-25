@@ -9,7 +9,7 @@ import { AddQuestForm } from "./AddQuestForm";
 export const QuestList: React.FC = () => {
     const { quests: fetchedQuests, loading, error, startQuestHandler } = useQuests();
     const [expandedId, setExpandedId] = useState<string | null>(null);
-    const [quests, setQuests] = useState<QuestItem[]>(fetchedQuests);
+    const [quests, setQuests] = useState<QuestItem[]>([]);
     const [showCreationForm, setShowCreationForm] = useState(false);
 
     useEffect(() => {
