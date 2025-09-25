@@ -6,7 +6,7 @@ import type { QuestCardProperties } from "../types";
 import { useTimedMessages } from "../hooks";
 
 export const QuestCard: React.FC<QuestCardProperties> = ({
-    quest, expanded, onExpandToggle, onStartQuest
+    quest, expanded, onExpandToggle, onStartQuest, onCompleteQuest
 }) => {
     const statusInfo = getStatusInfo(quest.status);
     const descriptionRef = useRef<HTMLDivElement>(null);
@@ -32,6 +32,17 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
         }
     };
 
+    const handleCompleteQuest = async () => {
+        showMessage("Completing quest...", "info", 1000);
+        try {
+            await onCompleteQuest();
+            showMessage("Success", "success", 1500);
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            showMessage(errorMessage, "error", 3000);
+        }
+    };
+
     const firstErrorMessage = messages.find(
         m => m.type === "error" && m.text.trim() !== ""
     );
@@ -48,6 +59,7 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
         <li
             className={clsx(
                 styles["quest-card"],
+                styles[statusInfo.cardClass],
                 expanded && styles["quest-card-expanded"]
             )}
         >
@@ -68,7 +80,7 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
                 <span
                     className={clsx(
                         styles["quest-status"],
-                        styles[statusInfo.className]
+                        styles[statusInfo.statusClass]
                     )}
                 >
                     {statusInfo.label}
@@ -92,12 +104,24 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
                 <p className="error-message">{firstErrorMessage?.text}</p>
 
                 {!firstErrorMessage?.text && <div className={styles["quest-format-button-container"]}>
-                    {quest.status === QuestStatus.Planned && <button
-                        className="primary"
-                        onClick={handleStartQuest}
-                    >
-                        Begin Quest
-                    </button>}
+                    {quest.status === QuestStatus.Planned &&
+                        messages.length == 0 &&
+                        <button
+                            className="primary"
+                            onClick={handleStartQuest}
+                        >
+                            Begin Quest
+                        </button>}
+                    {quest.status === QuestStatus.InProgress &&
+                        messages.length == 0 &&
+
+                        <button
+                            className="primary"
+                            onClick={handleCompleteQuest}
+                        >
+                            Complete Quest
+                        </button>}
+
                 </div>}
 
             </div>
