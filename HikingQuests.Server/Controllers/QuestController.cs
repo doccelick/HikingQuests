@@ -64,7 +64,16 @@ namespace HikingQuests.Server.Controllers
                 questLog.UpdateQuestDescription(id, updateQuestDto.Description!);
             }
 
-            return NoContent();
+            var updatedQuest = questLog.GetQuestById(id);
+
+            var response = new QuestResponseDto
+            {
+                Id = updatedQuest.Id,
+                Title = updatedQuest.Title,
+                Description = updatedQuest.Description,
+            };
+
+            return Ok(response);
         }
 
         [HttpPatch("{id}/start")]
