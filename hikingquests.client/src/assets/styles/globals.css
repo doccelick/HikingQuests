@@ -11,8 +11,24 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+    max-width: 600px;
+    width: 100%;
+}
+
+html,
 body {
-    place-items: center;
+    height: 100%;
+    margin: 0;
+}
+
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
@@ -26,38 +42,63 @@ textarea {
     min-height: 3rem;
 }
 
-button.primary {
+button {
     border-radius: 0.5rem;
     padding: 0.5em;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.9em;
+    font-weight: 500;
     cursor: pointer;
     border: 3px solid #0a0a0a;
-    background-color: #413f3f;
-    transition: background-color 0.2s, border-color 0.25s, transform 0.2s;
-}
-
-button.secondary {
-    border-radius: 0.5rem;
-    padding: 0.5em;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 3px solid #0a0a0a;
-    background-color: #8b1313;
     transition: background-color 0.2s, border-color 0.25s, transform 0.2s;
 }
 
 button:hover {
+    transform: scale(1.05);
+    background-color: #333333;
+}
+
+button.primary {
+    background-color: #116315;
+}
+
+button.secondary {
+    background-color: #7b8121;
+}
+
+button.tertiary {
+    background-color: #8b1313;
+}
+
+button.primary:hover {
     border-color: #646cff;
-    background-color: #163a0e;
+    background-color: #1f5014;
 }
 
 button.secondary:hover {
     border-color: #646cff;
-    background-color: #550e0e;
+    background-color: #373a11;
+}
+
+button.tertiary:hover {
+    border-color: #646cff;
+    background-color: #501111;
 }
 
 button:active {
     transform: scale(0.8);
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+}
+
+.info-message {
+    color: yellow;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    color: green;
+    font-size: 0.9rem;
 }

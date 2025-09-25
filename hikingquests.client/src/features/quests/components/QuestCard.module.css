@@ -1,27 +1,18 @@
 .quest-card {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     padding: 0.5rem;
-    border: 3px solid #0a0a0a;
+    border: 3px solid #333030;
     border-radius: 0.5rem;
     background-color: #413f3f;
     transition: transform 0.25s, background-color 0.25s;
 }
 
-.quest-card:hover {
-    transform: scale(1.01);
-    background-color: #163a0e;
-    border-color: #646cff;
-    cursor: pointer;
-}
-
 .quest-card-expanded {
     transform: scale(1.01);
-    background-color: #236b14;
-}
-
-.quest-card:focus {
-    background-color: #236b14;
+    border: 3px solid #1a1818;
+    background-color: #4b5249;
 }
 
 .quest-header {
@@ -32,6 +23,27 @@
 .quest-title {
     font-size: 1.25rem;
     font-weight: 400;
+}
+
+.quest-description {
+
+    font-weight: 200;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.quest-description-container {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.25s ease-in;
+    min-width: 0;
+    width: 100%;
+}
+
+.quest-description-container.expanded {
+    max-height: 200px;
+    opacity: 1;
 }
 
 .quest-status {
@@ -52,17 +64,15 @@
     color: green;
 }
 
-.quest-description {
-    font-weight: 200;
+.quest-format-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.2rem;
 }
 
-.quest-description-container {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.25s ease-in;
-}
-
-.quest-description-container.expanded {
-    max-height: 200px;
-    opacity: 1;
+.quest-card-expand-button {
+    padding: 0.6em;
+    border-radius: 0.3;
+    font-size: 0.9rem;
+    border: 2px solid #0a0a0a;
 }
