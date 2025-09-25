@@ -14,137 +14,78 @@ namespace HikingQuests.Server.Controllers
         public QuestController(IQuestLog incomingQuestLog) => questLog = incomingQuestLog;
 
         [HttpGet]
-        public IActionResult GetQuests() =>
-            HandleDomainExceptions(() =>
-            {
-                var quests = questLog.GetAllQuestItems();
-                return Ok(quests);
-            });
+        public IActionResult GetQuests()
+        {
+            var quests = questLog.GetAllQuestItems();
+            return Ok(quests);
+        }
 
         [HttpGet("{id}")]
-        public IActionResult GetQuestItemById(Guid id) =>
-            HandleDomainExceptions(() =>
-            {
-                var questItem = questLog.GetQuestById(id);
-                return Ok(questItem);
-            });
+        public IActionResult GetQuestItemById(Guid id)
+        {
+            var questItem = questLog.GetQuestById(id);
+            return Ok(questItem);
+        }
 
         [HttpPost]
-        public IActionResult AddQuest([FromBody] QuestItem questItem) =>
-            HandleDomainExceptions(() =>
-            {
-                questLog.AddQuest(questItem);
-                return CreatedAtAction(nameof(GetQuestItemById), new { id = questItem.Id }, questItem);
-            });
+        public IActionResult AddQuest([FromBody] QuestItem incomingQuestItem)
+        {
+            var questItem = questLog.AddQuest(incomingQuestItem);
+            return CreatedAtAction(nameof(GetQuestItemById), new { id = questItem.Id }, questItem);
+        }
+
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateQuest(Guid id, [FromBody] UpdateQuestDto updateQuestDto) =>
-            HandleDomainExceptions(() =>
+        public IActionResult UpdateQuest(Guid id, [FromBody] UpdateQuestDto updateQuestDto)
+        {            
+            if (updateQuestDto == null)
+                throw new ArgumentNullException(nameof(updateQuestDto), QuestMessages.UpdateQuestDtoCannotBeNull);
+
+            var titleIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Title);
+            var descriptionIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Description);
+
+            if (titleIsEmpty && descriptionIsEmpty)
+                throw new ArgumentException(QuestMessages.NothingToUpdate);
+
+            if (!ModelState.IsValid)
+                throw new ArgumentException(
+                    string.Join("; ", ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage))
+                );
+
+            if (!titleIsEmpty)
             {
-                var titleIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Title);
-                var descriptionIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Description);
+                questLog.UpdateQuestTitle(id, updateQuestDto.Title!);
+            }
 
-                if (titleIsEmpty && descriptionIsEmpty)
-                {
-                    return BadRequest(QuestMessages.NothingToUpdate);
-                }
+            if (!descriptionIsEmpty)
+            {
+                questLog.UpdateQuestDescription(id, updateQuestDto.Description!);
+            }
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                if (!string.IsNullOrWhiteSpace(updateQuestDto.Title))
-                {
-                    questLog.UpdateQuestTitle(id, updateQuestDto.Title);
-                }
-
-                if (!string.IsNullOrWhiteSpace(updateQuestDto.Description))
-                {
-                    questLog.UpdateQuestDescription(id, updateQuestDto.Description);
-                }
-
-                return NoContent();
-            });
+            return NoContent();
+        }
 
         [HttpPatch("{id}/start")]
         public IActionResult StartQuest(Guid id)
         {
-            try 
-            {
-                questLog.StartQuest(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(QuestMessages.QuestNotFound);
-            }
-            catch (InvalidOperationException ex) when (ex.Message == QuestMessages.QuestAlreadyInProgress)
-            {
-                return Conflict(QuestMessages.QuestAlreadyInProgress);
-            }
-            catch (InvalidOperationException ex) when (ex.Message == QuestMessages.QuestAlreadyCompleted)
-            {
-                return Conflict(QuestMessages.QuestAlreadyCompleted);
-            }
+            var updatedQuest = questLog.StartQuest(id);
+            return Ok(updatedQuest);
         }
 
         [HttpPatch("{id}/complete")]
         public IActionResult CompleteQuest(Guid id)
         {
-            try
-            {
-                questLog.CompleteQuest(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(QuestMessages.QuestNotFound);
-            }
-            catch (InvalidOperationException ex) when (ex.Message == QuestMessages.QuestNotInProgress)
-            {
-                return Conflict(QuestMessages.QuestNotInProgress);
-            }
-            catch (InvalidOperationException ex) when (ex.Message == QuestMessages.QuestAlreadyCompleted)
-            {
-                return Conflict(QuestMessages.QuestAlreadyCompleted);
-            }
+            questLog.CompleteQuest(id);
+            return NoContent();
         }
 
         [HttpDelete("{id}/delete")]
         public IActionResult DeleteQuest(Guid id)
         {
-            try
-            {
-                questLog.DeleteQuest(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(QuestMessages.QuestNotFound);
-            }
-        }
-
-        //TODO: Reconsider this generic approach.
-        //It might make more sense to handle exceptions explicitly in each function to get accurate messages.
-        private IActionResult HandleDomainExceptions(Func<IActionResult> action)
-        {
-            try
-            {
-                return action();
-            }
-            catch (ArgumentNullException)
-            {
-                return BadRequest(QuestMessages.QuestItemCannotBeNull);
-            }
-            catch (InvalidOperationException)
-            {
-                return Conflict(QuestMessages.QuestAlreadyExistsInLog);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(QuestMessages.QuestNotFound);
-            }
+            questLog.DeleteQuest(id);
+            return NoContent();
         }
     }
 }
