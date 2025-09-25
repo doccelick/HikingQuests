@@ -1,6 +1,7 @@
 .quest-card {
     display: flex;
     flex-direction: column;
+    align-items: center;
     min-width: 0;
     padding: 0.5rem;
     border: 3px solid #333030;
@@ -32,17 +33,21 @@
 }
 
 .quest-header {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    width: 100%;
 }
 
 .quest-title {
     font-size: 1.25rem;
     font-weight: 400;
+    width: 100%;
+    text-align: center;
 }
 
 .quest-description {
-
+    text-align: center;
     font-weight: 400;
     overflow-wrap: anywhere;
     word-break: break-all;
@@ -50,11 +55,12 @@
 }
 
 .quest-description-container {
+    width: 90%;
+    /* margin: 0 auto; */
     overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.25s ease-in;
+    /* max-height: 0; */
     min-width: 0;
-    width: 100%;
+    transition: max-height 0.25s ease-in;
 }
 
 .quest-description-container.expanded {

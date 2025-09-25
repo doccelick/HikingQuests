@@ -1,12 +1,8 @@
-import type { QuestItem } from "../types/QuestItem";
+import type { ErrorResponseDto, QuestItem, QuestResponseDto, UpdateQuestDto } from "../types";
 
 type NewQuestPayload = {
     title: string;
     description: string;
-}
-
-type ErrorResponseDto = {
-    message: string;
 }
 
 const serverUrl = "/api/quests";
@@ -25,7 +21,7 @@ export async function addQuest(newQuest: NewQuestPayload): Promise<QuestItem> {
 
     const response = await fetch(serverUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json; charset=utf-8" },
         body: JSON.stringify(newQuest),
     });
 
@@ -42,7 +38,7 @@ export async function startQuest(questId: string): Promise<QuestItem> {
 
     const response = await fetch(url, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json; charset=utf-8" },
     });
 
     let data: unknown;
@@ -65,7 +61,7 @@ export async function completeQuest(questId: string): Promise<QuestItem> {
 
     const response = await fetch(url, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json; charset=utf-8" },
     });
 
     let data: unknown;
@@ -83,3 +79,22 @@ export async function completeQuest(questId: string): Promise<QuestItem> {
     return data as QuestItem;
 }
 
+
+export async function updateQuest(questId: string, updateQuestDto: UpdateQuestDto): Promise<QuestResponseDto> {
+    const url = `/api/quests/${questId}`;
+
+    const response = await fetch(url, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify(updateQuestDto),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        const message = (data as ErrorResponseDto)?.message || "An unexpected error occurred";
+        throw new Error(message);
+    }
+
+    return data as QuestItem;
+}
