@@ -1,25 +1,76 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getStatusInfo, QuestStatus } from "../types/QuestStatus";
+import { getStatusInfo, QuestStatus } from "../types";
 import clsx from "clsx";
 import styles from "./QuestCard.module.css"
-import type { QuestCardProperties } from "../types";
+import type { QuestCardProperties, QuestEditingState } from "../types";
 import { useTimedMessages } from "../hooks";
 
 export const QuestCard: React.FC<QuestCardProperties> = ({
-    quest, expanded, onExpandToggle, onStartQuest, onCompleteQuest
+    quest,
+    expanded,
+    onExpandToggle,
+    onStartQuest,
+    onCompleteQuest,
+    onUpdateQuest
 }) => {
     const statusInfo = getStatusInfo(quest.status);
     const descriptionRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState("0px");
     const { messages, showMessage } = useTimedMessages(0);
+    const [saving, setSaving] = useState(false);
+    const [questEditing, setEditingQuest] = useState<QuestEditingState>({
+        isEditing: false,
+        title: quest.title,
+        description: quest.description
+    });
 
     useEffect(() => {
-        if (expanded && descriptionRef.current) {
-            setHeight(`${descriptionRef.current.scrollHeight}px`);
-        } else {
-            setHeight("0px");
+
+        if (!descriptionRef.current) {
+            return;
         }
-    }, [expanded]);
+
+        const updateHeight = () => {
+            if (expanded && descriptionRef.current) {
+                setHeight(`${descriptionRef.current.scrollHeight}px`);
+            } else {
+                setHeight("0px");
+            }
+        };
+        updateHeight();
+
+        const observer = new ResizeObserver(updateHeight);
+        observer.observe(descriptionRef.current);
+
+        return () => observer.disconnect();
+    }, [expanded, questEditing.isEditing]);
+
+
+    const handleEditQuest = () => setEditingQuest({
+        ...questEditing, isEditing: true
+    });
+
+    const handleCancelQuest = () => setEditingQuest({
+        isEditing: false,
+        title: quest.title,
+        description: quest.description
+    });
+
+    const handleConfirmEditQuest = async () => {
+        setSaving(true);
+        try {
+            await onUpdateQuest(quest.id, {
+                title: questEditing.title,
+                description: questEditing.description
+            })
+            setEditingQuest({
+                ...questEditing,
+                isEditing: false
+            });
+        } finally {
+            setSaving(false)
+        }
+    };
 
     const handleStartQuest = async () => {
         showMessage("Starting quest...", "info", 1000);
@@ -43,86 +94,105 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
         }
     };
 
-    const firstErrorMessage = messages.find(
+    const errorMessage = messages.find(
         m => m.type === "error" && m.text.trim() !== ""
     );
 
-    const firstInfoMessage = messages.find(
+    const infoMessage = messages.find(
         m => m.type === "info" && m.text.trim() !== ""
     );
 
-    const firstSuccessMessage = messages.find(
+    const successMessage = messages.find(
         m => m.type === "success" && m.text.trim() !== ""
     );
 
     return (
-        <li
-            className={clsx(
-                styles["quest-card"],
-                styles[statusInfo.cardClass],
-                expanded && styles["quest-card-expanded"]
-            )}
-        >
+        <li className={clsx(styles["quest-card"],
+            styles[statusInfo.cardClass],
+            expanded && styles["quest-card-expanded"])}>
 
             <div className={styles["quest-header"]}>
-                <button
-                    className={styles["quest-card-expand-button"]}
+
+                <button className={styles["quest-card-expand-button"]}
                     tabIndex={0}
-                    onClick={onExpandToggle}
-                >
-                    {
-                        expanded ? "▲" : "▼"
-                    }
-                </button>
-                <span
-                    className={styles["quest-title"]}>
-                    <strong>{quest.title}</strong></span>
-                <span
-                    className={clsx(
-                        styles["quest-status"],
-                        styles[statusInfo.statusClass]
-                    )}
-                >
-                    {statusInfo.label}
-                </span>
+                    onClick={onExpandToggle}>{expanded ? "▲" : "▼"}</button>
+
+                {!questEditing.isEditing &&
+                    <span className={styles["quest-title"]}>
+                        <strong>{quest.title}</strong></span>}
+
+                {questEditing.isEditing &&
+                    <input value={questEditing.title}
+                        onChange={
+                            e => setEditingQuest({
+                                ...questEditing, title: e.target.value
+                            })} />}
+
+                <span className={clsx(styles["quest-status"],
+                    styles[statusInfo.statusClass])}>
+                    {statusInfo.label}</span>
             </div>
 
-            <div
-                ref={descriptionRef}
+            <div ref={descriptionRef}
                 className={styles["quest-description-container"]}
-                style={{ maxHeight: height }}
-            >
-                <p
-                    className={styles["quest-description"]}
-                >
-                    {quest.description}
+                style={{ maxHeight: height }}>
 
-                </p>
+                {/*Quest description display field*/}
+                {!questEditing.isEditing &&
+                    <p className={styles["quest-description"]}>{quest.description}</p>}
 
-                <p className="info-message">{firstInfoMessage?.text}</p>
-                <p className="success-message">{firstSuccessMessage?.text}</p>
-                <p className="error-message">{firstErrorMessage?.text}</p>
+                {/*Quest description edit field*/}
+                {questEditing.isEditing &&
+                    <textarea value={questEditing.description}
+                        onChange={
+                            e => setEditingQuest({
+                                ...questEditing, description: e.target.value
+                            })} />}
 
-                {!firstErrorMessage?.text && <div className={styles["quest-format-button-container"]}>
-                    {quest.status === QuestStatus.Planned &&
-                        messages.length == 0 &&
-                        <button
-                            className="primary"
-                            onClick={handleStartQuest}
-                        >
-                            Begin Quest
+                <p className="info-message">{infoMessage?.text}</p>
+                <p className="success-message">{successMessage?.text}</p>
+                <p className="error-message">{errorMessage?.text}</p>
+
+                <div className={styles["quest-format-button-container"]}>
+
+                    {!questEditing.isEditing &&
+                        quest.status === QuestStatus.Planned && (
+                            <button className="primary"
+                                onClick={handleStartQuest}>
+                                Start Quest
+                            </button>)}
+
+                    {!questEditing.isEditing &&
+                        quest.status === QuestStatus.InProgress && (
+                            <button className="primary"
+                                onClick={handleCompleteQuest}>
+                                Complete Quest
+                            </button>)}
+
+                    {!questEditing.isEditing &&
+                        quest.status === QuestStatus.Planned &&
+                        messages.length === 0 && (
+                            <button className="secondary"
+                                onClick={handleEditQuest}>
+                                Edit Quest
+                            </button>)}
+
+
+                    {questEditing.isEditing &&
+                        <button className="primary"
+                            onClick={handleConfirmEditQuest}
+                            disabled={saving}>
+                            Confirm
                         </button>}
-                    {quest.status === QuestStatus.InProgress &&
-                        messages.length == 0 &&
 
-                        <button
-                            className="primary"
-                            onClick={handleCompleteQuest}
-                        >
-                            Complete Quest
+                    {questEditing.isEditing &&
+                        <button className="tertiary"
+                            onClick={handleCancelQuest}
+                            disabled={saving}>
+                            Cancel
                         </button>}
 
-                </div>}
+                </div>
 
             </div>
         </li >
