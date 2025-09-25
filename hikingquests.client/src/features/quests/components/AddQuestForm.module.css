@@ -10,25 +10,6 @@
     transition: transform 0.25s, background-color 0.25s;
 }
 
-.add-quest-form input,
-.add-quest-form textarea {
-    width: 98%;
-    border: 2px solid #555;
-    border-radius: 2px;
-    background-color: #1a1a1a;
-    font-family: inherit;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-}
-
-.add-quest-form input:focus,
-.add-quest-form textarea:focus {
-    transform: scale(1.005);
-    outline: none;
-    height: fit-content;
-    border-color: #646cff;
-    /* border-color: #27c434; */
-}
 
 .form-buttons {
     display: flex;
