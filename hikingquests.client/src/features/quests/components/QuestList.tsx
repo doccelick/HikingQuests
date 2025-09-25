@@ -7,7 +7,7 @@ import type { QuestItem } from "../types/QuestItem";
 import { AddQuestForm } from "./AddQuestForm";
 
 export const QuestList: React.FC = () => {
-    const { quests: fetchedQuests, loading, error, startQuestHandler } = useQuests();
+    const { quests: fetchedQuests, loading, error, startQuestHandler, completeQuestHandler } = useQuests();
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [quests, setQuests] = useState<QuestItem[]>([]);
     const [showCreationForm, setShowCreationForm] = useState(false);
@@ -50,6 +50,7 @@ export const QuestList: React.FC = () => {
                             setExpandedId(expandedId === quest.id ? null : quest.id)
                         }
                         onStartQuest={() => startQuestHandler(quest.id)}
+                        onCompleteQuest={() => completeQuestHandler(quest.id)}
                     />
                 ))}
             </ul>
