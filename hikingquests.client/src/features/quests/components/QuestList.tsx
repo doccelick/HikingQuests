@@ -7,9 +7,9 @@ import type { QuestItem } from "../types/QuestItem";
 import { AddQuestForm } from "./AddQuestForm";
 
 export const QuestList: React.FC = () => {
-    const { quests: fetchedQuests, loading, error } = useQuests();
+    const { quests: fetchedQuests, loading, error, startQuestHandler } = useQuests();
     const [expandedId, setExpandedId] = useState<string | null>(null);
-    const [quests, setQuests] = useState<QuestItem[]>(fetchedQuests)
+    const [quests, setQuests] = useState<QuestItem[]>(fetchedQuests);
     const [showCreationForm, setShowCreationForm] = useState(false);
 
     useEffect(() => {
@@ -30,7 +30,7 @@ export const QuestList: React.FC = () => {
             {error && <p>Error: {error}</p>}
             <div className={clsx(styles["add-quest-button-container"])}>
                 {!showCreationForm && (
-                    <button className="primary" onClick={() => setShowCreationForm(true)}>Add Quest</button>
+                    <button onClick={() => setShowCreationForm(true)}>Add Quest</button>
                 )}
             </div>
             {showCreationForm && (
@@ -49,6 +49,7 @@ export const QuestList: React.FC = () => {
                         onExpandToggle={() =>
                             setExpandedId(expandedId === quest.id ? null : quest.id)
                         }
+                        onStartQuest={() => startQuestHandler(quest.id)}
                     />
                 ))}
             </ul>
