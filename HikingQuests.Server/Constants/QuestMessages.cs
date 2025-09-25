@@ -5,7 +5,7 @@ namespace HikingQuests.Server.Constants
         public const string TitleCannotBeNullOrEmpty = "Title cannot be null or empty.";
         public const string DescriptionCannotBeNullOrEmpty = "Description cannot be null or empty.";
         public const string QuestCannotBeStarted = "Quest cannot be started";
-        public static string QuestAlreadyInProgress = "Quest is already started";
+        public static string QuestAlreadyInProgress = "Quest is already in progress";
         public const string QuestAlreadyCompleted = "Quest is already completed.";
         public const string QuestNotInProgress = "Quest must be in progress to be completed.";
         public const string QuestAlreadyExistsInLog = "Quest with same ID already exists in the quest log.";
@@ -15,5 +15,6 @@ namespace HikingQuests.Server.Constants
         public const string TitleTooLong = "Title cannot exceed 100 characters.";
         public const string DescriptionTooLong = "Description cannot exceed 500 characters.";
         public const string UnexpectedError = "An unexpected error occured";
+        public const string UpdateQuestDtoCannotBeNull = "'UpdateQuestDto' cannot be null";
     }
 }

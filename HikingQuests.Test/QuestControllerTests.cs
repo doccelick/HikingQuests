@@ -127,7 +127,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void GetQuestById_Returns_NotFound_For_Invalid_Id()
+        public void GetQuestById_Throws_KeyNotFoundException_For_Invalid_Id()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var invalidId = Guid.NewGuid();
@@ -135,12 +135,10 @@ namespace HikingQuests.Test
 
             mockQuestLog
                 .Setup(q => q.GetQuestById(invalidId))
-                .Throws(new KeyNotFoundException());
+                .Throws(new KeyNotFoundException(QuestMessages.QuestNotFound));
 
-            var result = controller.GetQuestItemById(invalidId);
-
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
+            var exception = Assert.Throws<KeyNotFoundException>(() => controller.GetQuestItemById(invalidId));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
 
             mockQuestLog.Verify(q => q.GetQuestById(invalidId), Times.Once);
         }
@@ -153,6 +151,10 @@ namespace HikingQuests.Test
 
             var newQuest = new QuestItem("New Quest", "New Description");
 
+            mockQuestLog
+                .Setup(q => q.AddQuest(It.IsAny<QuestItem>()))
+                .Returns((QuestItem q) => q);
+
             var result = controller.AddQuest(newQuest);
 
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -163,22 +165,19 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void AddQuest_Returns_BadRequest_When_Quest_Is_Null()
+        public void AddQuest_Returns_ArgumentNullException_When_Quest_Is_Null()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var controller = new QuestController(mockQuestLog.Object);
 
             mockQuestLog
                 .Setup(q => q.AddQuest(It.IsAny<QuestItem>()))
-                .Throws(
-                new ArgumentNullException(nameof(QuestItem)
-                , QuestMessages.QuestItemCannotBeNull
-                ));
+                .Throws(new ArgumentNullException(nameof(QuestItem), QuestMessages.QuestItemCannotBeNull));
 
-            var result = controller.AddQuest(null!);
+            var exception = Assert.Throws<ArgumentNullException>(() => controller.AddQuest(null!));
 
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestItemCannotBeNull, badRequestResult.Value);
+            Assert.StartsWith(QuestMessages.QuestItemCannotBeNull, exception.Message);
+            Assert.Equal(nameof(QuestItem), exception.ParamName);
 
             mockQuestLog.Verify(q => q.AddQuest(It.IsAny<QuestItem>()), Times.Once);
         }
@@ -192,14 +191,11 @@ namespace HikingQuests.Test
 
             mockQuestLog
                 .Setup(q => q.AddQuest(existingQuest))
-                .Throws(new InvalidOperationException()
+                .Throws(new InvalidOperationException(QuestMessages.QuestAlreadyExistsInLog)
                 );
 
-
-            var result = controller.AddQuest(existingQuest);
-
-            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestAlreadyExistsInLog, conflictResult.Value);
+            var exception = Assert.Throws<InvalidOperationException>(() => controller.AddQuest(existingQuest));
+            Assert.Equal(QuestMessages.QuestAlreadyExistsInLog, exception.Message);
 
             mockQuestLog.Verify(q => q.AddQuest(existingQuest), Times.Once);
         }
@@ -255,7 +251,7 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void UpdateQuest_Updating_Title_Only_Returns_NotFound_For_Invalid_Id()
+        public void UpdateQuest_Updating_Title_Only_Throws_KeyNotFoundException_For_Invalid_Id()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var invalidId = Guid.NewGuid();
@@ -265,18 +261,19 @@ namespace HikingQuests.Test
 
             mockQuestLog
                 .Setup(q => q.UpdateQuestTitle(invalidId, It.IsAny<string>()))
-                .Throws(new KeyNotFoundException());
+                .Throws(new KeyNotFoundException(QuestMessages.QuestNotFound));
 
+            var exception = Assert.Throws<KeyNotFoundException>(() =>
+                controller.UpdateQuest(invalidId, updateQuestDto));
 
-            var result = controller.UpdateQuest(invalidId, updateQuestDto);
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
 
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
             mockQuestLog.Verify(q => q.UpdateQuestTitle(invalidId, updateQuestDto.Title), Times.Once);
         }
 
+
         [Fact]
-        public void UpdateQuest_Updating_Description_Only_Returns_NotFound_For_Invalid_Id()
+        public void UpdateQuest_Throws_KeyNotFoundException_For_Invalid_Id()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var invalidId = Guid.NewGuid();
@@ -286,37 +283,40 @@ namespace HikingQuests.Test
 
             mockQuestLog
                 .Setup(q => q.UpdateQuestDescription(invalidId, It.IsAny<string>()))
-                .Throws(new KeyNotFoundException());
+                .Throws(new KeyNotFoundException(QuestMessages.QuestNotFound));
 
+            var exception = Assert.Throws<KeyNotFoundException>(() =>
+                controller.UpdateQuest(invalidId, updateQuestDto));
 
-            var result = controller.UpdateQuest(invalidId, updateQuestDto);
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
 
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
             mockQuestLog.Verify(q => q.UpdateQuestDescription(invalidId, updateQuestDto.Description), Times.Once);
         }
 
+
         [Fact]
-        public void UpdateQuest_Returns_BadRequest_When_No_Fields_To_Update()
+        public void UpdateQuest_Throws_ArgumentException_When_No_Fields_To_Update()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var existingId = Guid.NewGuid();
             var controller = new QuestController(mockQuestLog.Object);
 
             var updateQuestDto = new UpdateQuestDto { };
-            
-            var result = controller.UpdateQuest(existingId, updateQuestDto);
-            
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal(QuestMessages.NothingToUpdate, badRequestResult.Value);
+
+            var exception = Assert.Throws<ArgumentException>(() =>
+                controller.UpdateQuest(existingId, updateQuestDto));
+
+            Assert.Equal(QuestMessages.NothingToUpdate, exception.Message);
         }
 
+
         [Fact]
-        public void UpdateQuest_Having_More_Than_100_Characters_In_Title_Returns_BadRequest()
+        public void UpdateQuest_Title_Longer_Than_100_Characters_Throws_ArgumentException()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var existingId = Guid.NewGuid();
             var controller = new QuestController(mockQuestLog.Object);
+
             var longTitle = new string('A', 101);
             var updateQuestDto = new UpdateQuestDto { Title = longTitle };
 
@@ -329,29 +329,23 @@ namespace HikingQuests.Test
                 controller.ModelState.AddModelError(
                     validationResult.MemberNames.FirstOrDefault() ?? string.Empty,
                     validationResult.ErrorMessage ?? string.Empty
-                    );
+                );
             }
 
-            var result = controller.UpdateQuest(existingId, updateQuestDto);
-            
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var exception = Assert.Throws<ArgumentException>(() =>
+                controller.UpdateQuest(existingId, updateQuestDto));
 
-            var serializableError = badRequestResult.Value as SerializableError;
-            Assert.NotNull(serializableError);
-
-            var error = serializableError
-                .SelectMany(kvp => kvp.Value as string[] ?? Array.Empty<string>())
-                .FirstOrDefault();
-
-            Assert.Equal(QuestMessages.TitleTooLong, error);
+            Assert.Contains(QuestMessages.TitleTooLong, exception.Message);
         }
 
+
         [Fact]
-        public void UpdateQuest_Having_More_Than_500_Characters_In_Description_Returns_BadRequest()
+        public void UpdateQuest_Description_Longer_Than_500_Characters_Throws_ArgumentException()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var existingId = Guid.NewGuid();
             var controller = new QuestController(mockQuestLog.Object);
+
             var longDescription = new string('A', 501);
             var updateQuestDto = new UpdateQuestDto { Description = longDescription };
 
@@ -364,53 +358,56 @@ namespace HikingQuests.Test
                 controller.ModelState.AddModelError(
                     validationResult.MemberNames.FirstOrDefault() ?? string.Empty,
                     validationResult.ErrorMessage ?? string.Empty
-                    );
+                );
             }
 
-            var result = controller.UpdateQuest(existingId, updateQuestDto);
+            var exception = Assert.Throws<ArgumentException>(() =>
+                controller.UpdateQuest(existingId, updateQuestDto));
 
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-
-            var serializableError = badRequestResult.Value as SerializableError;
-            Assert.NotNull(serializableError);
-
-            var error = serializableError
-                .SelectMany(kvp => kvp.Value as string[] ?? Array.Empty<string>())
-                .FirstOrDefault();
-
-            Assert.Equal(QuestMessages.DescriptionTooLong, error);
+            Assert.Contains(QuestMessages.DescriptionTooLong, exception.Message);
         }
 
+
         [Fact]
-        public void StartQuest_Calls_QuestLog_StartQuest_And_Returns_NoContent()
+        public void StartQuest_Calls_QuestLog_StartQuest_And_Returns_UpdatedQuest()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var questId = Guid.NewGuid();
+            var updatedQuest = new QuestItem("Quest 1", "Description 1");
+
+            mockQuestLog.Setup(q => q.StartQuest(questId))
+                         .Returns(updatedQuest);
+
             var controller = new QuestController(mockQuestLog.Object);
 
             var result = controller.StartQuest(questId);
 
-            var noContentResult = Assert.IsType<NoContentResult>(result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedQuest = Assert.IsType<QuestItem>(okResult.Value);
+
+            Assert.Equal(updatedQuest.Id, returnedQuest.Id);
             mockQuestLog.Verify(q => q.StartQuest(questId), Times.Once());
         }
 
         [Fact]
-        public void StartQuest_Returns_NotFound_When_Quest_Does_Not_Exist()
+        public void StartQuest_Throws_KeyNotFoundException_When_Quest_Does_Not_Exist()
         {
             var mockQuestLog = new Mock<IQuestLog>();
-            var invalidId = Guid.NewGuid();
-            mockQuestLog.Setup(q => q.StartQuest(invalidId))
-                         .Throws(new KeyNotFoundException());
+            var questId = Guid.NewGuid();
+
+            mockQuestLog.Setup(q => q.StartQuest(questId))
+                .Throws(new KeyNotFoundException(QuestMessages.QuestNotFound));
+
             var controller = new QuestController(mockQuestLog.Object);
 
-            var result = controller.StartQuest(invalidId);
+            var exception = Assert.Throws<KeyNotFoundException>(() => controller.StartQuest(questId));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
 
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
+            mockQuestLog.Verify(q => q.StartQuest(questId), Times.Once);
         }
 
         [Fact]
-        public void StartQuest_Returns_Conflict_When_Quest_Already_In_Progress()
+        public void StartQuest_Throws_InvalidOperationException_When_Quest_Already_In_Progress()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var questId = Guid.NewGuid();
@@ -420,30 +417,30 @@ namespace HikingQuests.Test
 
             var controller = new QuestController(mockQuestLog.Object);
 
-            var result = controller.StartQuest(questId);
+            var exception = Assert.Throws<InvalidOperationException>(() => controller.StartQuest(questId));
+            Assert.Equal(QuestMessages.QuestAlreadyInProgress, exception.Message);
 
-            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
-
-            Assert.Equal(QuestMessages.QuestAlreadyInProgress, conflictResult.Value);
+            mockQuestLog.Verify(q => q.StartQuest(questId), Times.Once);
         }
 
         [Fact]
-        public void StartQuest_Returns_Conflict_When_Quest_Already_Completed()
+        public void StartQuest_Throws_InvalidOperationException_When_Quest_Already_Completed()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var questId = Guid.NewGuid();
 
-            mockQuestLog.Setup(q => q.StartQuest(questId))
+            mockQuestLog
+                .Setup(q => q.StartQuest(questId))
                 .Throws(new InvalidOperationException(QuestMessages.QuestAlreadyCompleted));
 
             var controller = new QuestController(mockQuestLog.Object);
 
-            var result = controller.StartQuest(questId);
+            var exception = Assert.Throws<InvalidOperationException>(() => controller.StartQuest(questId));
+            Assert.Equal(QuestMessages.QuestAlreadyCompleted, exception.Message);
 
-            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
-
-            Assert.Equal(QuestMessages.QuestAlreadyCompleted, conflictResult.Value);
+            mockQuestLog.Verify(q => q.StartQuest(questId), Times.Once);
         }
+
 
         [Fact]
         public void CompleteQuest_Calls_QuestLog_CompleteQuest_And_Returns_NoContent()
@@ -460,54 +457,57 @@ namespace HikingQuests.Test
         }
 
         [Fact]
-        public void CompleteQuest_Returns_NotFound_When_Quest_Does_Not_Exist()
-        {
-            var mockQuestLog = new Mock<IQuestLog>();
-            var invalidId = Guid.NewGuid();
-            mockQuestLog.Setup(q => q.CompleteQuest(invalidId))
-                         .Throws(new KeyNotFoundException());
-            var controller = new QuestController(mockQuestLog.Object);
-
-            var result = controller.CompleteQuest(invalidId);
-
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
-        }
-
-        [Fact]
-        public void CompleteQuest_Returns_Conflict_When_Quest_Not_In_Progress()
+        public void CompleteQuest_Returns_KeyNotFoundException_When_Quest_Does_Not_Exist()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var questId = Guid.NewGuid();
 
-            mockQuestLog.Setup(q => q.CompleteQuest(questId))
+            mockQuestLog
+                .Setup(q => q.CompleteQuest(questId))
+                .Throws(new InvalidOperationException(QuestMessages.QuestNotFound));
+
+            var controller = new QuestController(mockQuestLog.Object);
+
+            var exception = Assert.Throws<InvalidOperationException>(() => controller.CompleteQuest(questId));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
+
+            mockQuestLog.Verify(q => q.CompleteQuest(questId), Times.Once);
+        }
+
+        [Fact]
+        public void CompleteQuest_Throws_InvalidOperationException_When_Quest_Not_In_Progress()
+        {
+            var mockQuestLog = new Mock<IQuestLog>();
+            var questId = Guid.NewGuid();
+
+            mockQuestLog
+                .Setup(q => q.CompleteQuest(questId))
                 .Throws(new InvalidOperationException(QuestMessages.QuestNotInProgress));
 
             var controller = new QuestController(mockQuestLog.Object);
 
-            var result = controller.CompleteQuest(questId);
+            var exception = Assert.Throws<InvalidOperationException>(() => controller.CompleteQuest(questId));
+            Assert.Equal(QuestMessages.QuestNotInProgress, exception.Message);
 
-            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
-
-            Assert.Equal(QuestMessages.QuestNotInProgress, conflictResult.Value);
+            mockQuestLog.Verify(q => q.CompleteQuest(questId), Times.Once);
         }
 
         [Fact]
-        public void CompleteQuest_Returns_Conflict_When_Quest_Already_Completed()
+        public void CompleteQuest_Throws_InvalidOperationException_When_Quest_Already_Completed()
         {
             var mockQuestLog = new Mock<IQuestLog>();
             var questId = Guid.NewGuid();
 
-            mockQuestLog.Setup(q => q.CompleteQuest(questId))
+            mockQuestLog
+                .Setup(q => q.CompleteQuest(questId))
                 .Throws(new InvalidOperationException(QuestMessages.QuestAlreadyCompleted));
 
             var controller = new QuestController(mockQuestLog.Object);
 
-            var result = controller.CompleteQuest(questId);
+            var exception = Assert.Throws<InvalidOperationException>(() => controller.CompleteQuest(questId));
+            Assert.Equal(QuestMessages.QuestAlreadyCompleted, exception.Message);
 
-            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
-
-            Assert.Equal(QuestMessages.QuestAlreadyCompleted, conflictResult.Value);
+            mockQuestLog.Verify(q => q.CompleteQuest(questId), Times.Once);
         }
 
         [Fact]
@@ -528,15 +528,18 @@ namespace HikingQuests.Test
         public void DeleteQuest_Returns_NotFound_When_Quest_Does_Not_Exist()
         {
             var mockQuestLog = new Mock<IQuestLog>();
-            var invalidId = Guid.NewGuid();
-            mockQuestLog.Setup(q => q.DeleteQuest(invalidId))
-                         .Throws(new KeyNotFoundException());
+            var questId = Guid.NewGuid();
+
+            mockQuestLog
+                .Setup(q => q.DeleteQuest(questId))
+                .Throws(new InvalidOperationException(QuestMessages.QuestNotFound));
+
             var controller = new QuestController(mockQuestLog.Object);
 
-            var result = controller.DeleteQuest(invalidId);
+            var exception = Assert.Throws<InvalidOperationException>(() => controller.DeleteQuest(questId));
+            Assert.Equal(QuestMessages.QuestNotFound, exception.Message);
 
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(QuestMessages.QuestNotFound, notFoundResult.Value);
+            mockQuestLog.Verify(q => q.DeleteQuest(questId), Times.Once);
         }
     }
 }

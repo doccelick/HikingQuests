@@ -8,7 +8,7 @@ namespace HikingQuests.Server.Models
 
         private Dictionary<Guid, QuestItem> questItems = new Dictionary<Guid, QuestItem>();
         
-        public void AddQuest(QuestItem questItem)
+        public QuestItem AddQuest(QuestItem questItem)
         {
             if (questItem == null)
             {
@@ -20,6 +20,7 @@ namespace HikingQuests.Server.Models
                 throw new InvalidOperationException(QuestMessages.QuestAlreadyExistsInLog);
             }
             questItems[questItem.Id] = questItem;
+            return questItems[questItem.Id];
         }
 
         public QuestItem GetQuestById(Guid questId)
@@ -48,25 +49,61 @@ namespace HikingQuests.Server.Models
 
         public void UpdateQuestTitle(Guid questId, string newTitle)
         {
+            if (string.IsNullOrWhiteSpace(newTitle))
+            {
+                throw new ArgumentException(QuestMessages.TitleCannotBeNullOrEmpty);
+            }
+
             var questItem = GetQuestById(questId);
             questItem.UpdateTitle(newTitle);
         }
 
         public void UpdateQuestDescription(Guid questId, string newDescription)
         {
+            if (string.IsNullOrWhiteSpace(newDescription))
+            {
+                throw new ArgumentException(QuestMessages.DescriptionCannotBeNullOrEmpty);
+            }
             var questItem = GetQuestById(questId);
             questItem.UpdateDescription(newDescription);
         }
 
-        public void StartQuest(Guid questId)
+        public QuestItem StartQuest(Guid questId)
         {
             var questItem = GetQuestById(questId);
+
+            if (questItem == null)
+            {
+                throw new KeyNotFoundException(QuestMessages.QuestNotFound);
+            }
+            if (questItem.Status == QuestStatus.InProgress)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestAlreadyInProgress);
+            }
+            if (questItem.Status == QuestStatus.Completed)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestAlreadyCompleted);
+            }
             questItem.StartQuest();
+            return questItem;
         }
 
         public void CompleteQuest(Guid questId)
         {
             var questItem = GetQuestById(questId);
+
+            if (questItem == null)
+            {
+                throw new KeyNotFoundException(QuestMessages.QuestNotFound);
+            }
+            if (questItem.Status == QuestStatus.Planned)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestNotInProgress);
+            }
+            if (questItem.Status == QuestStatus.Completed)
+            {
+                throw new InvalidOperationException(QuestMessages.QuestAlreadyCompleted);
+            }            
             questItem.CompleteQuest();
         }
 
@@ -76,7 +113,7 @@ namespace HikingQuests.Server.Models
 
             if (questItem == null)
             {
-                return;
+                throw new KeyNotFoundException(QuestMessages.QuestNotFound);
             }
 
             questItems.Remove(questId);
