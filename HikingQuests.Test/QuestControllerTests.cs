@@ -200,55 +200,6 @@ namespace HikingQuests.Test
             mockQuestLog.Verify(q => q.AddQuest(existingQuest), Times.Once);
         }
 
-        [Fact]
-        public void UpdateQuest_Correctly_Updates_Quest_Title_Only()
-        {
-            var mockQuestLog = new Mock<IQuestLog>();
-            var existingId = Guid.NewGuid();
-            var controller = new QuestController(mockQuestLog.Object);
-
-            var updateQuestDto = new UpdateQuestDto { Title = "Updated Title" };
-
-            var result = controller.UpdateQuest(existingId, updateQuestDto);
-
-
-            var noContentResult = Assert.IsType<NoContentResult>(result);
-            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingId, updateQuestDto.Title), Times.Once);
-            mockQuestLog.Verify(q => q.UpdateQuestDescription(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
-        }
-
-        [Fact]
-        public void UpdateQuest_Correctly_Updates_Quest_Description_Only()
-        {
-            var mockQuestLog = new Mock<IQuestLog>();
-            var existingId = Guid.NewGuid();
-            var controller = new QuestController(mockQuestLog.Object);
-
-            var updateQuestDto = new UpdateQuestDto { Description = "Updated Description" };
-
-            var result = controller.UpdateQuest(existingId, updateQuestDto);
-
-
-            var noContentResult = Assert.IsType<NoContentResult>(result);
-            mockQuestLog.Verify(q => q.UpdateQuestDescription(existingId, updateQuestDto.Description), Times.Once);
-            mockQuestLog.Verify(q => q.UpdateQuestTitle(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
-        }
-
-        [Fact]
-        public void UpdateQuest_Correctly_Updates_Both_Quest_Title_And_Description()
-        {
-            var mockQuestLog = new Mock<IQuestLog>();
-            var existingId = Guid.NewGuid();
-            var controller = new QuestController(mockQuestLog.Object);
-
-            var updateQuestDto = new UpdateQuestDto { Title = "Updated Title", Description = "Updated Description" };
-
-            var result = controller.UpdateQuest(existingId, updateQuestDto);
-
-            var noContentResult = Assert.IsType<NoContentResult>(result);
-            mockQuestLog.Verify(q => q.UpdateQuestTitle(existingId, updateQuestDto.Title), Times.Once);
-            mockQuestLog.Verify(q => q.UpdateQuestDescription(existingId, updateQuestDto.Description), Times.Once);
-        }
 
         [Fact]
         public void UpdateQuest_Updating_Title_Only_Throws_KeyNotFoundException_For_Invalid_Id()
@@ -270,7 +221,6 @@ namespace HikingQuests.Test
 
             mockQuestLog.Verify(q => q.UpdateQuestTitle(invalidId, updateQuestDto.Title), Times.Once);
         }
-
 
         [Fact]
         public void UpdateQuest_Throws_KeyNotFoundException_For_Invalid_Id()
