@@ -11,13 +11,15 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
     onExpandToggle,
     onStartQuest,
     onCompleteQuest,
-    onUpdateQuest
+    onUpdateQuest,
+    onDeleteQuest
 }) => {
     const statusInfo = getStatusInfo(quest.status);
     const descriptionRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState("0px");
     const { messages, showMessage } = useTimedMessages(0);
     const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const [questEditing, setEditingQuest] = useState<QuestEditingState>({
         isEditing: false,
         title: quest.title,
@@ -43,14 +45,14 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
         observer.observe(descriptionRef.current);
 
         return () => observer.disconnect();
-    }, [expanded, questEditing.isEditing]);
+    }, [expanded, questEditing.isEditing, deleting]);
 
 
     const handleEditQuest = () => setEditingQuest({
         ...questEditing, isEditing: true
     });
 
-    const handleCancelQuest = () => setEditingQuest({
+    const handleCancelEditQuest = () => setEditingQuest({
         isEditing: false,
         title: quest.title,
         description: quest.description
@@ -67,7 +69,11 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
                 ...questEditing,
                 isEditing: false
             });
-        } finally {
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            showMessage(errorMessage, "error", 3000);
+        }
+        finally {
             setSaving(false)
         }
     };
@@ -88,6 +94,19 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
         try {
             await onCompleteQuest();
             showMessage("Success", "success", 1500);
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            showMessage(errorMessage, "error", 3000);
+        }
+    };
+
+    const handleAboutToDeleteQuest = () => setDeleting(true);
+    const handleCancelDeleteQuest = () => setDeleting(false);
+
+    const handleConfirmDeleteQuest = async () => {
+        try {
+            await onDeleteQuest();
+            setDeleting(false);
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : String(err);
             showMessage(errorMessage, "error", 3000);
@@ -137,11 +156,9 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
                 className={styles["quest-description-container"]}
                 style={{ maxHeight: height }}>
 
-                {/*Quest description display field*/}
                 {!questEditing.isEditing &&
                     <p className={styles["quest-description"]}>{quest.description}</p>}
 
-                {/*Quest description edit field*/}
                 {questEditing.isEditing &&
                     <textarea value={questEditing.description}
                         onChange={
@@ -153,47 +170,69 @@ export const QuestCard: React.FC<QuestCardProperties> = ({
                 <p className="success-message">{successMessage?.text}</p>
                 <p className="error-message">{errorMessage?.text}</p>
 
+                {deleting && <p className="warning-message">(Press 'Confirm' to delete)</p>}
+
                 <div className={styles["quest-format-button-container"]}>
+                    {!questEditing.isEditing && !deleting &&
+                        <>
+                            {quest.status === QuestStatus.Planned && (
+                                <button className="primary"
+                                    onClick={handleStartQuest}>
+                                    Start Quest
+                                </button>)}
 
-                    {!questEditing.isEditing &&
-                        quest.status === QuestStatus.Planned && (
-                            <button className="primary"
-                                onClick={handleStartQuest}>
-                                Start Quest
-                            </button>)}
+                            {quest.status === QuestStatus.InProgress && (
+                                <button className="primary"
+                                    onClick={handleCompleteQuest}>
+                                    Complete Quest
+                                </button>)}
 
-                    {!questEditing.isEditing &&
-                        quest.status === QuestStatus.InProgress && (
-                            <button className="primary"
-                                onClick={handleCompleteQuest}>
-                                Complete Quest
-                            </button>)}
+                            {quest.status === QuestStatus.Planned &&
+                                messages.length === 0 && (
+                                    <button className="secondary"
+                                        onClick={handleEditQuest}>
+                                        Edit Quest
+                                    </button>)}
 
-                    {!questEditing.isEditing &&
-                        quest.status === QuestStatus.Planned &&
-                        messages.length === 0 && (
-                            <button className="secondary"
-                                onClick={handleEditQuest}>
-                                Edit Quest
-                            </button>)}
+                            {quest.status === QuestStatus.Planned &&
+                                messages.length === 0 && (
+                                    <button className="tertiary"
+                                        onClick={handleAboutToDeleteQuest}>
+                                        Delete Quest
+                                    </button>)}
+                        </>
+                    }
+                    {!questEditing.isEditing && deleting &&
+                        <>
+                            {<button className="primary"
+                                onClick={handleConfirmDeleteQuest}
+                                disabled={saving}>
+                                Confirm
+                            </button>}
 
+                            {<button className="tertiary"
+                                onClick={handleCancelDeleteQuest}
+                                disabled={saving}>
+                                Cancel
+                            </button>}
+                        </>
+                    }
+                    {questEditing.isEditing && !deleting &&
+                        <>
+                            {<button className="primary"
+                                onClick={handleConfirmEditQuest}
+                                disabled={saving}>
+                                Confirm
+                            </button>}
 
-                    {questEditing.isEditing &&
-                        <button className="primary"
-                            onClick={handleConfirmEditQuest}
-                            disabled={saving}>
-                            Confirm
-                        </button>}
-
-                    {questEditing.isEditing &&
-                        <button className="tertiary"
-                            onClick={handleCancelQuest}
-                            disabled={saving}>
-                            Cancel
-                        </button>}
-
+                            {<button className="tertiary"
+                                onClick={handleCancelEditQuest}
+                                disabled={saving}>
+                                Cancel
+                            </button>}
+                        </>
+                    }
                 </div>
-
             </div>
         </li >
     );
