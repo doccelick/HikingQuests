@@ -103,7 +103,7 @@ Focus on TDD (Test Driven Development), domain modeling, API and a simple user i
 - [x] Create Quest Form.
 - [x] Update Quest Status.
 - [x] Edit Quest Form.
-- [ ] Delete Quest.
+- [x] Delete Quest.
 - [ ] API Integration.
 - [ ] Error Handling.
 - [ ] Basic Styling.

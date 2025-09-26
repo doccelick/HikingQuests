@@ -9,10 +9,12 @@ import { AddQuestForm } from "./AddQuestForm";
 export const QuestList: React.FC = () => {
     const {
         quests: fetchedQuests,
-        loading, error,
+        loading,
+        error,
         startQuestHandler,
         completeQuestHandler,
-        updateQuestHandler
+        updateQuestHandler,
+        deleteQuestHandler
     } = useQuests();
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [quests, setQuests] = useState<QuestItem[]>([]);
@@ -57,6 +59,7 @@ export const QuestList: React.FC = () => {
                         }
                         onStartQuest={() => startQuestHandler(quest.id)}
                         onCompleteQuest={() => completeQuestHandler(quest.id)}
+                        onDeleteQuest={() => deleteQuestHandler(quest.id)}
                         onUpdateQuest={async (questId, updatedQuestData) => {
                             await updateQuestHandler(questId, updatedQuestData);
                             setQuests((prevQuests) =>

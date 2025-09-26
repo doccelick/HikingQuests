@@ -37,15 +37,19 @@ namespace HikingQuests.Server.Controllers
 
         [HttpPatch("{id}")]
         public IActionResult UpdateQuest(Guid id, [FromBody] UpdateQuestDto updateQuestDto)
-        {            
+        {
             if (updateQuestDto == null)
+            {
                 throw new ArgumentNullException(nameof(updateQuestDto), QuestMessages.UpdateQuestDtoCannotBeNull);
+            }
 
             var titleIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Title);
             var descriptionIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Description);
 
             if (titleIsEmpty && descriptionIsEmpty)
+            {
                 throw new ArgumentException(QuestMessages.NothingToUpdate);
+            }          
 
             if (!ModelState.IsValid)
                 throw new ArgumentException(
@@ -54,15 +58,8 @@ namespace HikingQuests.Server.Controllers
                         .Select(e => e.ErrorMessage))
                 );
 
-            if (!titleIsEmpty)
-            {
-                questLog.UpdateQuestTitle(id, updateQuestDto.Title!);
-            }
-
-            if (!descriptionIsEmpty)
-            {
-                questLog.UpdateQuestDescription(id, updateQuestDto.Description!);
-            }
+            questLog.UpdateQuestTitle(id, updateQuestDto.Title!);
+            questLog.UpdateQuestDescription(id, updateQuestDto.Description!);
 
             var updatedQuest = questLog.GetQuestById(id);
 

@@ -8,4 +8,5 @@ export interface QuestCardProperties {
     onStartQuest: () => void;
     onCompleteQuest: () => void;
     onUpdateQuest: (id: string, dto: UpdateQuestDto) => Promise<void>;
+    onDeleteQuest: () => void;
 }

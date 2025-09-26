@@ -1,5 +1,5 @@
 import type { QuestItem } from "../types/QuestItem";
-import { completeQuest, getQuests, startQuest, updateQuest } from "../services";
+import { completeQuest, deleteQuest, getQuests, startQuest, updateQuest } from "../services";
 import { useRetryableFetch } from "./useRetryableFetch";
 import { useMemo } from "react";
 import type { UpdateQuestDto } from "../types";
@@ -15,7 +15,9 @@ export function useQuests() {
 
     const completeQuestHandler = (id: string) => completeQuest(id).then(refetch);
 
-    const updateQuestHandler = (id: string, updateQuestDto: UpdateQuestDto) => updateQuest(id, updateQuestDto);
+    const updateQuestHandler = (id: string, updateQuestDto: UpdateQuestDto) => updateQuest(id, updateQuestDto).then(refetch);
+
+    const deleteQuestHandler = (id: string) => deleteQuest(id).then(refetch);
 
     const quests = useMemo(() => data ?? [], [data]);
 
@@ -25,6 +27,7 @@ export function useQuests() {
         error,
         startQuestHandler,
         completeQuestHandler,
-        updateQuestHandler
+        updateQuestHandler,
+        deleteQuestHandler
     };
 }

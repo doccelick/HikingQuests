@@ -101,6 +101,13 @@ button:active {
     text-align: center;
 }
 
+.warning-message {
+    font-weight: 600;
+    color: #f02020;
+    font-style: italic;
+    text-align: center;
+}
+
 input {
     width: 90%;
     text-align: center;
