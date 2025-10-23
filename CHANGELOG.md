@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.8] - 2025-10-23
+### Server
+- Feature/Version display
+### Client
+- Feature/Version display
+
 ## [0.16.7] - 2025-10-21
 ### Server
 - Fix/MVP wrapup
