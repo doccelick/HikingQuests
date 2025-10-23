@@ -1,4 +1,4 @@
-import type { QuestItem } from "../types/QuestItem";
+import type { QuestItem } from "../types";
 import { completeQuest, deleteQuest, getQuests, startQuest, updateQuest } from "../services";
 import { useRetryableFetch } from "./useRetryableFetch";
 import { useMemo } from "react";
