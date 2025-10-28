@@ -1,6 +1,4 @@
-﻿using HikingQuests.Server.Infrastructure.Entities;
-using HikingQuests.Server.Models;
-using Microsoft.AspNetCore.Http;
+﻿using HikingQuests.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers

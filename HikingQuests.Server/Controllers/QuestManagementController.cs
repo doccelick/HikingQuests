@@ -1,6 +1,5 @@
 ﻿using HikingQuests.Server.Constants;
 using HikingQuests.Server.Dtos;
-using HikingQuests.Server.Infrastructure.Entities;
 using HikingQuests.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 

@@ -8,8 +8,8 @@ namespace HikingQuests.Server.Controllers
     public class QuestQueryController : ControllerBase
     {
         private readonly IQuestQueryService _questQueryService;
-        public QuestQueryController(IQuestQueryService incomingQuestLog) 
-            => _questQueryService = incomingQuestLog;
+        public QuestQueryController(IQuestQueryService questQueryService) 
+            => _questQueryService = questQueryService;
 
         [HttpGet]
         public IActionResult GetQuests()

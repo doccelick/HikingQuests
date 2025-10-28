@@ -11,19 +11,17 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ApiExceptionFilter>();
 });
 
-// In-memory singleton
-builder.Services.AddSingleton<IQuestManagementService>(sp =>
-{
-    var questLog = new QuestLog();
+var questLogInstance = new QuestLog();
+//TODO: remove when database seeding is implemented.
+questLogInstance.AddQuest(new QuestItem("Walk 5 km", "Walk 5 km or more on a forest path."));
+questLogInstance.AddQuest(new QuestItem("Catch a trout", "Catch a trout with a fishing rod."));
+questLogInstance.AddQuest(new QuestItem("Sleep in a tent", "Spend at least 1 night in the forest sleeping in a tent."));
+questLogInstance.AddQuest(new QuestItem("Build a campfire", "Build a campfire using materials you find around the camp."));
+questLogInstance.AddQuest(new QuestItem("Find a porcini mushroom", "Locate a porcini mushroom in the forest."));
 
-    questLog.AddQuest(new QuestItem("Walk 5 km", "Walk 5 km or more on a forest path."));
-    questLog.AddQuest(new QuestItem("Catch a trout", "Catch a trout with a fishing rod."));
-    questLog.AddQuest(new QuestItem("Sleep in a tent", "Spend at least 1 night in the forest sleeping in a tent."));
-    questLog.AddQuest(new QuestItem("Build a campfire", "Build a campfire using materials you find around the camp."));
-    questLog.AddQuest(new QuestItem("Find a porcini mushroom", "Locate a porcini mushroom in the forest."));
-
-    return questLog;
-});
+builder.Services.AddSingleton<IQuestManagementService>(questLogInstance);
+builder.Services.AddSingleton<IQuestQueryService>(questLogInstance);
+builder.Services.AddSingleton<IQuestWorkflowService>(questLogInstance);
 
 var app = builder.Build();
 
