@@ -5,6 +5,7 @@ using HikingQuests.Server.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.ComponentModel.DataAnnotations;
+using HikingQuests.Server.Domain.Entities;
 
 namespace HikingQuests.Tests.QuestControllerTests
 {

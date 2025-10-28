@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HikingQuests.Server.Constants;
 
-namespace HikingQuests.Server.Dtos
+namespace HikingQuests.Server.Application.Dtos
 {
     public class UpdateQuestDto
     {       

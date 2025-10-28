@@ -1,7 +1,8 @@
 ﻿using HikingQuests.Server.Constants;
+using HikingQuests.Server.Domain.Entities;
 using HikingQuests.Server.Models;
 
-namespace HikingQuests.Test
+namespace HikingQuests.Tests.ModelTests
 {
     public class QuestLogTests
     {

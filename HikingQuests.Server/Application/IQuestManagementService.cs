@@ -1,4 +1,6 @@
-﻿namespace HikingQuests.Server.Models
+﻿using HikingQuests.Server.Domain.Entities;
+
+namespace HikingQuests.Server.Models
 {
     public interface IQuestManagementService
     {
