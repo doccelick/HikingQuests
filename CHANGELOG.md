@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.9] - 2025-10-28
+### Server
+- Fix/updated project plan for deployment
+### Client
+- Fix/updated project plan for deployment
+
 ## [0.16.8] - 2025-10-23
 ### Server
 - Feature/Version display
