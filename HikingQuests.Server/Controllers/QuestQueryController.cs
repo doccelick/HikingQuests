@@ -1,4 +1,4 @@
-﻿using HikingQuests.Server.Models;
+﻿using HikingQuests.Server.Application;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers

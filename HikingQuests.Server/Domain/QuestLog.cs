@@ -1,7 +1,7 @@
 ﻿using HikingQuests.Server.Constants;
 using HikingQuests.Server.Domain.Entities;
 using HikingQuests.Server.Domain.ValueObjects;
-using HikingQuests.Server.Models;
+using HikingQuests.Server.Application;
 
 namespace HikingQuests.Server.Domain
 {

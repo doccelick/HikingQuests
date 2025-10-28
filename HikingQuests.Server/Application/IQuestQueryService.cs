@@ -1,6 +1,6 @@
 ﻿using HikingQuests.Server.Domain.Entities;
 
-namespace HikingQuests.Server.Models
+namespace HikingQuests.Server.Application
 {
     public interface IQuestQueryService
     {

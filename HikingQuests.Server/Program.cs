@@ -1,6 +1,6 @@
+using HikingQuests.Server.Application;
 using HikingQuests.Server.Domain;
 using HikingQuests.Server.Domain.Entities;
-using HikingQuests.Server.Models;
 using HikingQuests.Server.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);

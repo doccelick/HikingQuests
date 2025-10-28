@@ -1,6 +1,6 @@
 ﻿using HikingQuests.Server.Constants;
+using HikingQuests.Server.Domain;
 using HikingQuests.Server.Domain.Entities;
-using HikingQuests.Server.Models;
 
 namespace HikingQuests.Tests.ModelTests
 {

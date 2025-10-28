@@ -1,5 +1,5 @@
-using HikingQuests.Server.Models;
 using HikingQuests.Server.Constants;
+using HikingQuests.Server.Domain.Entities;
 using HikingQuests.Server.Domain.ValueObjects;
 
 namespace HikingQuests.Tests.ModelTests
