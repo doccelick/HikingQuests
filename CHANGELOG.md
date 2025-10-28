@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.10] - 2025-10-28
+### Server
+- Fix/questlog interface refactor
+### Client
+- Fix/questlog interface refactor
+
 ## [0.16.9] - 2025-10-28
 ### Server
 - Fix/updated project plan for deployment

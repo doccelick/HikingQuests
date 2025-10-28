@@ -5,13 +5,17 @@ type NewQuestPayload = {
     description: string;
 }
 
-const serverUrl = "/api/quests";
+//TODO: Refactor into separate service scripts
+const serverUrlForQuery = "/api/quest-query";
+const serverUrlForManagement = "/api/quest-management";
+const serverUrlForWorkflow = "/api/quest-workflow";
+
 const headers = { "Content-Type": "application/json; charset=utf-8" };
 const unexpectedError = "An unexpected Error occured";
 
 export async function getQuests(): Promise<QuestItem[]> {
 
-    const response = await fetch(serverUrl);
+    const response = await fetch(serverUrlForQuery);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch quests: ${response.status}`);
@@ -21,7 +25,7 @@ export async function getQuests(): Promise<QuestItem[]> {
 
 export async function addQuest(newQuest: NewQuestPayload): Promise<QuestItem> {
 
-    const response = await fetch(serverUrl, {
+    const response = await fetch(serverUrlForManagement, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(newQuest),
@@ -37,7 +41,7 @@ export async function addQuest(newQuest: NewQuestPayload): Promise<QuestItem> {
 }
 
 export async function startQuest(questId: string): Promise<QuestItem> {
-    const url = `${serverUrl}/${questId}/start`;
+    const url = `${serverUrlForWorkflow}/${questId}/start`;
 
     const response = await fetch(url, {
         method: "PATCH",
@@ -60,7 +64,7 @@ export async function startQuest(questId: string): Promise<QuestItem> {
 }
 
 export async function completeQuest(questId: string): Promise<QuestItem> {
-    const url = `${serverUrl}/${questId}/complete`;
+    const url = `${serverUrlForWorkflow}/${questId}/complete`;
 
     const response = await fetch(url, {
         method: "PATCH",
@@ -83,7 +87,7 @@ export async function completeQuest(questId: string): Promise<QuestItem> {
 }
 
 export async function updateQuest(questId: string, updateQuestDto: UpdateQuestDto): Promise<QuestResponseDto> {
-    const url = `${serverUrl}/${questId}`;
+    const url = `${serverUrlForManagement}/${questId}`;
 
     const response = await fetch(url, {
         method: "PATCH",
@@ -102,7 +106,7 @@ export async function updateQuest(questId: string, updateQuestDto: UpdateQuestDt
 }
 
 export async function deleteQuest(questId: string): Promise<void> {
-    const url = `${serverUrl}/${questId}/delete`;
+    const url = `${serverUrlForManagement}/${questId}/delete`;
 
     const response = await fetch(url, {
         method: "DELETE",
