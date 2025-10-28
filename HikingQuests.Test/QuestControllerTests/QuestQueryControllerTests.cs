@@ -1,6 +1,7 @@
-﻿using HikingQuests.Server.Constants;
+﻿using HikingQuests.Server.Application;
+using HikingQuests.Server.Constants;
 using HikingQuests.Server.Controllers;
-using HikingQuests.Server.Models;
+using HikingQuests.Server.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 

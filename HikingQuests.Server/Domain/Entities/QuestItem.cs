@@ -1,6 +1,7 @@
 ﻿using HikingQuests.Server.Constants;
+using HikingQuests.Server.Domain.ValueObjects;
 
-namespace HikingQuests.Server.Models
+namespace HikingQuests.Server.Domain.Entities
 {
     public class QuestItem
     {

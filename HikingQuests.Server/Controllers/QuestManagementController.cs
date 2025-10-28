@@ -1,6 +1,7 @@
-﻿using HikingQuests.Server.Constants;
-using HikingQuests.Server.Dtos;
-using HikingQuests.Server.Models;
+﻿using HikingQuests.Server.Application;
+using HikingQuests.Server.Application.Dtos;
+using HikingQuests.Server.Constants;
+using HikingQuests.Server.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers

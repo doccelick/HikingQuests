@@ -1,4 +1,4 @@
-﻿namespace HikingQuests.Server.Models
+﻿namespace HikingQuests.Server.Domain.ValueObjects
 {
     public enum QuestStatus
     {

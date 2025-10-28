@@ -1,4 +1,4 @@
-﻿namespace HikingQuests.Server.Dtos
+﻿namespace HikingQuests.Server.Application.Dtos
 {
     public class ErrorResponseDto
     {

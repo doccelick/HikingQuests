@@ -1,10 +1,9 @@
 ﻿using HikingQuests.Server.Controllers;
-using HikingQuests.Server.Dtos;
-using HikingQuests.Server.Models;
 using HikingQuests.Server.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.ComponentModel.DataAnnotations;
+using HikingQuests.Server.Domain.Entities;
+using HikingQuests.Server.Application;
 
 namespace HikingQuests.Tests.QuestControllerTests
 {

@@ -1,6 +1,9 @@
 ﻿using HikingQuests.Server.Constants;
+using HikingQuests.Server.Domain.Entities;
+using HikingQuests.Server.Domain.ValueObjects;
+using HikingQuests.Server.Application;
 
-namespace HikingQuests.Server.Models
+namespace HikingQuests.Server.Domain
 {
     public class QuestLog : IQuestWorkflowService, IQuestManagementService, IQuestQueryService
     {
