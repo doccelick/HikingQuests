@@ -2,7 +2,7 @@
 
 namespace HikingQuests.Server.Models
 {
-    public class QuestLog : IQuestLog
+    public class QuestLog : IQuestWorkflowService, IQuestManagementService, IQuestQueryService
     {
         public QuestLog() { }
 

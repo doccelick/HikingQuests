@@ -12,7 +12,7 @@ builder.Services.AddControllers(options =>
 });
 
 // In-memory singleton
-builder.Services.AddSingleton<IQuestLog>(sp =>
+builder.Services.AddSingleton<IQuestManagementService>(sp =>
 {
     var questLog = new QuestLog();
 
