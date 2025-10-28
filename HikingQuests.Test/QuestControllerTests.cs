@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.ComponentModel.DataAnnotations;
 
-namespace HikingQuests.Test
+namespace HikingQuests.Tests
 {
     public class QuestControllerTests
     {

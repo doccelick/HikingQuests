@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36429.23 d17.14
+VisualStudioVersion = 17.14.36429.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "hikingquests.client", "hikingquests.client\hikingquests.client.esproj", "{1405471B-04E4-AAEA-7C7B-375D6907D1C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HikingQuests.Server", "HikingQuests.Server\HikingQuests.Server.csproj", "{071566AB-8FF0-4CEA-A765-2E4122A06066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HikingQuests.Test", "HikingQuests.Test\HikingQuests.Test.csproj", "{B46F65A1-3A5F-4DF6-A07C-F8AEA598E89E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HikingQuests.Tests", "HikingQuests.Test\HikingQuests.Tests.csproj", "{B46F65A1-3A5F-4DF6-A07C-F8AEA598E89E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
