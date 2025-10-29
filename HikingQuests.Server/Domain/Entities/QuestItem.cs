@@ -29,6 +29,12 @@ namespace HikingQuests.Server.Domain.Entities
             Status = QuestStatus.Planned;
         }
 
+        public QuestItem(Guid questIdentifier, string title, string description, QuestStatus status) : this (title, description)
+        {
+            this.questIdentifier = questIdentifier;
+            this.Status = status;
+        }
+
         public void UpdateTitle(string? newTitle)
         {            
             if (string.IsNullOrWhiteSpace(newTitle))

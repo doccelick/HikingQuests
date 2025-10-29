@@ -1,4 +1,4 @@
-﻿using HikingQuests.Server.Application;
+﻿using HikingQuests.Server.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers
@@ -8,20 +8,27 @@ namespace HikingQuests.Server.Controllers
     public class QuestQueryController : ControllerBase
     {
         private readonly IQuestQueryService _questQueryService;
+
         public QuestQueryController(IQuestQueryService questQueryService) 
             => _questQueryService = questQueryService;
 
         [HttpGet]
-        public IActionResult GetQuests()
+        public async Task<IActionResult> GetAllQuestsAsync()
         {
-            var quests = _questQueryService.GetAllQuestItems();
+            var quests = await _questQueryService.GetAllQuestsAsync();
             return Ok(quests);
         }
 
         [HttpGet("{id}",Name = "GetQuestByIdRoute")]
-        public IActionResult GetQuestItemById(Guid id)
+        public async Task<IActionResult> GetQuestItemByIdAsync(Guid id)
         {
-            var questItem = _questQueryService.GetQuestById(id);
+            var questItem = await _questQueryService.GetQuestByIdAsync(id);
+
+            if (questItem == null)
+            {
+                return NotFound();
+            }
+
             return Ok(questItem);
         }
     }

@@ -48,18 +48,17 @@ export async function startQuest(questId: string): Promise<QuestItem> {
         headers: headers,
     });
 
+    if (response.ok && response.status === 204) {
+        return { id: questId } as QuestItem;
+    }
+
     const data: QuestItem | ErrorResponseDto = await response.json();
 
     if (!response.ok) {
         const message = (data as ErrorResponseDto).message || unexpectedError;
         throw new Error(message);
     }
-
-    if (!response.ok) {
-        const message = (data as ErrorResponseDto).message || unexpectedError;
-        throw new Error(message);
-    }
-
+    
     return data as QuestItem;
 }
 
@@ -71,12 +70,11 @@ export async function completeQuest(questId: string): Promise<QuestItem> {
         headers: headers,
     });
 
-    const data: QuestItem | ErrorResponseDto = await response.json();
-
-    if (!response.ok) {
-        const message = (data as ErrorResponseDto).message || unexpectedError;
-        throw new Error(message);
+    if (response.ok && response.status === 204) {
+        return { id: questId } as QuestItem;
     }
+
+    const data: QuestItem | ErrorResponseDto = await response.json();
 
     if (!response.ok) {
         const message = (data as ErrorResponseDto)?.message || unexpectedError;
@@ -94,6 +92,10 @@ export async function updateQuest(questId: string, updateQuestDto: UpdateQuestDt
         headers: headers,
         body: JSON.stringify(updateQuestDto),
     });
+
+    if (response.ok && response.status === 204) {
+        return { id: questId } as QuestItem; 
+    }
 
     const data: QuestItem | ErrorResponseDto = await response.json();
 
