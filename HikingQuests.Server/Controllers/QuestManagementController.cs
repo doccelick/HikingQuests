@@ -1,7 +1,6 @@
-﻿using HikingQuests.Server.Application;
-using HikingQuests.Server.Application.Dtos;
+﻿using HikingQuests.Server.Application.Dtos;
+using HikingQuests.Server.Application.Interfaces;
 using HikingQuests.Server.Constants;
-using HikingQuests.Server.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers
@@ -11,35 +10,33 @@ namespace HikingQuests.Server.Controllers
     public class QuestManagementController : ControllerBase
     {
         private readonly IQuestManagementService _questManagementService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public QuestManagementController(IQuestManagementService questManagementService) 
-            => _questManagementService = questManagementService;
+        public QuestManagementController(IQuestManagementService questManagementService, IUnitOfWork unitOfWork)
+        {
+            _questManagementService = questManagementService;
+            _unitOfWork = unitOfWork;
+        }
 
         [HttpPost]
-        public IActionResult AddQuest([FromBody] QuestItem incomingQuestItem)
+        public async Task<IActionResult> AddQuestAsync([FromBody] AddQuestDto addQuestDto)
         {
-            var questItem = _questManagementService.AddQuest(incomingQuestItem);
+            var questItem = await _questManagementService.AddQuestAsync(addQuestDto);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return CreatedAtRoute(
-                routeName: "GetQuestByIdRoute", 
-                routeValues: new { id = questItem.Id }, 
+                routeName: "GetQuestByIdRoute",
+                routeValues: new { id = questItem.Id },
                 value: questItem);
         }
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateQuest(Guid id, [FromBody] UpdateQuestDto updateQuestDto)
+        public async Task<IActionResult> UpdateQuestAsync(Guid id, [FromBody] UpdateQuestDto updateQuestDto)
         {
             if (updateQuestDto == null)
             {
                 throw new ArgumentNullException(nameof(updateQuestDto), QuestMessages.UpdateQuestDtoCannotBeNull);
-            }
-
-            var titleIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Title);
-            var descriptionIsEmpty = string.IsNullOrWhiteSpace(updateQuestDto.Description);
-
-            if (titleIsEmpty && descriptionIsEmpty)
-            {
-                throw new ArgumentException(QuestMessages.NothingToUpdate);
             }
 
             if (!ModelState.IsValid)
@@ -49,17 +46,28 @@ namespace HikingQuests.Server.Controllers
                         .Select(e => e.ErrorMessage))
                 );
 
-            _questManagementService.UpdateQuestTitle(id, updateQuestDto.Title!);
-            _questManagementService.UpdateQuestDescription(id, updateQuestDto.Description!);
+            var titleHasValue = !string.IsNullOrWhiteSpace(updateQuestDto.Title);
+            var descriptionHasValue = !string.IsNullOrWhiteSpace(updateQuestDto.Description);
 
+            if (!titleHasValue && !descriptionHasValue)
+            {
+                throw new ArgumentException(QuestMessages.NothingToUpdate);
+            }
+
+            await _questManagementService.UpdateQuestAsync(id, updateQuestDto);
+
+            await _unitOfWork.SaveChangesAsync();
 
             return NoContent();
         }
 
         [HttpDelete("{id}/delete")]
-        public IActionResult DeleteQuest(Guid id)
+        public async Task<IActionResult> DeleteQuestAsync(Guid id)
         {
-            _questManagementService.DeleteQuest(id);
+            await _questManagementService.DeleteQuestAsync(id);
+
+            await _unitOfWork.SaveChangesAsync();
+
             return NoContent();
         }
     }
