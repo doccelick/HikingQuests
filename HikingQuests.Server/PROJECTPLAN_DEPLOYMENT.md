@@ -109,17 +109,21 @@ Docker, GitHub Actions, Render / Fly.io (backend), Netlify / Vercel (frontend), 
 ## Task Breakdown
 
 ### Domain (C#)
-- [] Add EF Core models (QuestEntity, UserEntity).
-- [] Configure domain-data mapping.
-- [] Add seed data for local testing.
-- [] Add persistence tests using EF Core InMemory provider.
+- [x] Add EF Core models for quests (QuestEntity).
+- [] Add EF Core models for Users(UserEntity).
+- [x] Configure domain-data mapping.
+- [x] Add seed data for local testing.
+- [x] Add persistence tests using SQLite provider.
 
 ### Application (ASP.NET Core)
-- [] Implement AddDbContext with EF Core.
-- [] Implement repository abstraction (IQuestRepository, IUserRepository).
+- [x] Implement AddDbContext with EF Core.
+- [x] Implement repository abstraction for quests (IQuestRepository)
+- [] Implement repository abstraction for users (IUserRepository).
 - [] Add AuthController for Google OAuth.
 - [] Apply database migrations and test schema.
-- [] Add integration tests for CRUD and auth.
+- [x] Add integration tests for CRUD (quests)
+- [] Add integration tests for CRUD (users)
+- [] Add integration tests for auth.
 - [] Add rate limiting, CORS, and HTTPS redirection.
 - [] Create Dockerfile and docker-compose setup for backend + DB.
 
