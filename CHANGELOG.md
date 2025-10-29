@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.10] - 2025-10-29
+### Server
+- Feature/ef core setup
+### Client
+- Feature/ef core setup
+
 ## [0.16.10] - 2025-10-28
 ### Server
 - Fix/questlog interface refactor
