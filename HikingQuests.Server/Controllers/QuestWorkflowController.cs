@@ -1,4 +1,4 @@
-﻿using HikingQuests.Server.Application;
+﻿using HikingQuests.Server.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HikingQuests.Server.Controllers
@@ -8,20 +8,31 @@ namespace HikingQuests.Server.Controllers
     public class QuestWorkflowController : ControllerBase
     {
         private readonly IQuestWorkflowService _questWorkFlowService;
-        public QuestWorkflowController(IQuestWorkflowService questWorkFlowService) 
-            => _questWorkFlowService = questWorkFlowService;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public QuestWorkflowController(IQuestWorkflowService questWorkFlowService, IUnitOfWork unitOfWork)
+        {
+            _questWorkFlowService = questWorkFlowService;
+            _unitOfWork = unitOfWork;
+        }
 
         [HttpPatch("{id}/start")]
-        public IActionResult StartQuest(Guid id)
+        public async Task<IActionResult> StartQuestAsync(Guid id)
         {
-            var updatedQuest = _questWorkFlowService.StartQuest(id);
-            return Ok(updatedQuest);
+            await _questWorkFlowService.StartQuestAsync(id);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return NoContent();
         }
 
         [HttpPatch("{id}/complete")]
-        public IActionResult CompleteQuest(Guid id)
+        public async Task<IActionResult> CompleteQuestAsync(Guid id)
         {
-            _questWorkFlowService.CompleteQuest(id);
+            await _questWorkFlowService.CompleteQuestAsync(id);
+
+            await _unitOfWork.SaveChangesAsync();
+
             return NoContent();
         }
     }
