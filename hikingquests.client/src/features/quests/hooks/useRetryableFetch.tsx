@@ -47,5 +47,5 @@ export function useRetryableFetch<T>(
         };
     }, [fetchData]);
 
-    return { data, loading, error, refetch: fetchData };
+    return { data, setData, loading, error, refetch: fetchData };
 }
